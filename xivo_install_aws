@@ -11,7 +11,7 @@ IP=$(/sbin/ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk {'print
 sudo cat << EOF > /etc/xivo/xivo-tools/configure.d/default.ini
 [general]
 hostname = xivo
-domain = lan-quebec.avencall.com
+domain = aws.proformatique.com
 timezone = America/Montreal
 lang = fr_FR
 
