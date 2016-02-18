@@ -48,4 +48,9 @@ At this end:
 
     terraform show
     
+To remove instance:
+
+    terraform plan -destroy
+    terraform destroy
+    
 Have fun!
