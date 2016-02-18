@@ -30,3 +30,5 @@ EOF
 
 sudo xivo-configure
 sudo xivo-service restart
+sudo xivo-configure
+sudo xivo-service restart
