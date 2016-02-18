@@ -31,6 +31,14 @@ resource "aws_instance" "xivo" {
 }
 ```
 
+Update with your value:
+
+- access_key
+- secret_key
+- subnet_id
+- key_name
+- private_key
+
 Launch this command:
 
     terraform plan
