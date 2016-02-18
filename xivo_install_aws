@@ -1,9 +1,10 @@
 #!/bin/bash
 
 sudo hostname xivo
+sudo echo "127.0.0.1 xivo" >> /etc/hosts
 wget http://mirror.xivo.io/fai/xivo-migration/xivo_install_current.sh
 sudo bash /home/admin/xivo_install_current.sh -r
-sudo apt-get install xivo-dev-scripts
+sudo apt-get -yyq install xivo-dev-scripts
 
 IP=$(/sbin/ifconfig eth0 | grep "inet adr" | awk -F: '{print $2}' | awk {'print $1}')
 
@@ -27,4 +28,5 @@ displayname = Entity
 description = wizard configuration
 EOF
 
+sudo xivo-configure
 sudo xivo-service restart
