@@ -1,0 +1,30 @@
+#!/bin/bash
+
+sudo hostname xivo
+wget http://mirror.xivo.io/fai/xivo-migration/xivo_install_current.sh
+sudo bash /home/admin/xivo_install_current.sh -r
+sudo apt-get install xivo-dev-scripts
+
+IP=$(/sbin/ifconfig eth0 | grep "inet adr" | awk -F: '{print $2}' | awk {'print $1}')
+
+sudo cat << EOF > /etc/xivo/xivo-tools/configure.d/default.ini
+[general]
+hostname = xivo
+domain = lan-quebec.avencall.com
+timezone = America/Montreal
+lang = fr_FR
+
+[network]
+iface = eth0
+address = $IP
+netmask = 255.255.0.0
+gateway = 10.0.0.1
+nameservers = 8.8.8.8, 9.9.9.9
+
+[entity]
+name = entity
+displayname = Entity
+description = wizard configuration
+EOF
+
+sudo xivo-service restart
