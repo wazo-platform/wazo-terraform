@@ -1,33 +1,56 @@
 #!/bin/bash
 
-wget http://mirror.xivo.io/fai/xivo-migration/xivo_install_current.sh
-sudo bash /home/admin/xivo_install_current.sh -r
-sudo apt-get -yyq install xivo-dev-scripts
+function configure_ha() {
+    wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/ha
+    sudo xivo-service restart
+    python /home/admin/ha
+    sudo xivo-service restart
+}
 
-IP=$(/sbin/ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk {'print $1}')
+function add_config_wizard() {
+    sudo apt-get -yyq install xivo-dev-scripts
+    IP=$(/sbin/ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk {'print $1}')
+    sudo cat << EOF > /etc/xivo/xivo-tools/configure.d/default.ini
+    [general]
+    hostname = xivo
+    domain = aws.proformatique.com
+    timezone = America/Montreal
+    lang = fr_FR
 
-sudo cat << EOF > /etc/xivo/xivo-tools/configure.d/default.ini
-[general]
-hostname = xivo
-domain = aws.proformatique.com
-timezone = America/Montreal
-lang = fr_FR
+    [network]
+    iface = eth0
+    address = $IP
+    netmask = 255.255.0.0
+    gateway = 10.0.0.1
+    nameservers = 8.8.8.8, 9.9.9.9
 
-[network]
-iface = eth0
-address = $IP
-netmask = 255.255.0.0
-gateway = 10.0.0.1
-nameservers = 8.8.8.8, 9.9.9.9
-
-[entity]
-name = entity
-displayname = Entity
-description = wizard configuration
+    [entity]
+    name = entity
+    displayname = Entity
+    description = wizard configuration
 EOF
 
-sudo hostname xivo
-sudo xivo-configure
-sudo xivo-service restart
-sudo xivo-configure
-sudo xivo-service restart
+    sudo hostname xivo
+    sudo xivo-configure
+    sudo xivo-service restart
+    # Because the configure bug the fist time
+    sudo xivo-configure
+}
+
+function install_xivo() {
+    wget http://mirror.xivo.io/fai/xivo-migration/xivo_install_current.sh
+    sudo bash /home/admin/xivo_install_current.sh -r
+}
+
+function add_swap() {
+    dd if=/dev/zero of=/swap bs=1024 count=524288
+    chown root:root /swap
+    chmod 0600 /swap
+    mkswap /swap
+    swapon /swap
+}
+
+add_swap
+install_xivo
+add_config_wizard
+configure_ha
