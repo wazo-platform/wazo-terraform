@@ -25,6 +25,10 @@ resource "aws_instance" "xivo" {
     provisioner "file" {
         source = "private_ips.txt"
         destination = "/tmp/private_ips.txt"
+        connection {
+            user = "admin"
+            private_key = "${var.private_key}"
+        }
     }
 
     provisioner "remote-exec" {
@@ -33,7 +37,6 @@ resource "aws_instance" "xivo" {
             "bash /tmp/xivo_install_aws",
             "python /tmp/xivo_ctl_ha"
         ]
-
         connection {
             user = "admin"
             private_key = "${var.private_key}"
