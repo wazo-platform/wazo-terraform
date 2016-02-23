@@ -26,7 +26,7 @@ resource "aws_instance" "xivo" {
         source = "private_ips.txt"
         destination = "/tmp/private_ips.txt"
         connection {
-            user = "admin"
+            user = "root"
             private_key = "${var.private_key}"
         }
     }
@@ -67,6 +67,24 @@ resource "aws_security_group" "xivo" {
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }
+    ingress {
+        from_port = 9486
+        to_port = 9486
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        from_port = 9497
+        to_port = 9497
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        from_port = 5060
+        to_port = 5060
+        protocol = "udp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
     egress {
         from_port = 0
         to_port = 0
@@ -80,7 +98,7 @@ resource "aws_security_group" "xivo" {
 }
 
 output "ips" {
-   value = "${aws_instance.xivo.0.private_ip} ${aws_instance.xivo.1.private_ip}"
+   value = "${aws_instance.xivo.0.public_ip} ${aws_instance.xivo.1.public_ip}"
 }
 
 variable "access_key" {
