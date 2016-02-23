@@ -1,50 +1,38 @@
 # xivo-aws
 
-Install terraform (http://terraform.io)
+This repo install and configure XiVO as a HA service on AWS (Amazon Cloud). The login for the
+web interface is superpass by default.
 
-Create a xivo.tf with this content:
+Requirements
+------------
 
-```
-provider "aws" {
+- Terraform
+- AWS account
+
+Launch
+------
+
+Install terraform (https://www.terraform.io/downloads.html)
+
+Init the terraform infrastructure.
+
+    terraform init https://github.com/sboily/xivo-aws
+
+Create a terraform.tfvars with your value:
+
     access_key = ""
     secret_key = ""
-    region = "us-east-1"
-}
-
-resource "aws_instance" "xivo" {
-    ami = "ami-8b9a63e0"
-    instance_type = "t2.micro"
-    subnet_id = ""
     key_name = ""
-
-    provisioner "remote-exec" {
-        inline = [
-        "wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/xivo_install_aws",
-        "sudo bash /home/admin/xivo_install_aws"
-        ]
-
-        connection {
-            user = "admin"
-            private_key = ""
-        }
-    }
-}
-```
-
-Update with your value:
-
-- access_key
-- secret_key
-- subnet_id
-- key_name
-- private_key
+    subnet_id = ""
+    private_key = ""
+    vpc_id = ""
 
 Launch this command:
 
     terraform plan
     terraform apply
 
-At this end:
+At this end to getting informations:
 
     terraform show
     
