@@ -1,0 +1,6 @@
+#cloud-config
+hostname: xivo
+runcmd:
+ - wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_install_aws
+ - sudo bash /home/admin/xivo_install_aws
+ 
