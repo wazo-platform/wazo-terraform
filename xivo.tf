@@ -19,7 +19,8 @@ resource "aws_instance" "xivo" {
 
     provisioner "remote-exec" {
         inline = [
-        "echo FINISH"
+            "wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_install_aws -O /tmp/xivo_install_aws"
+            "bash /tmp/xivo_install_aws"
         ]
 
         connection {
@@ -71,7 +72,7 @@ variable "amazon_amis" {
 }
 
 resource "aws_security_group" "xivo" {
-    name = "xivo"
+    name = "XiVO"
     description = "XiVO rules"
     vpc_id = "${var.vpc_id}"
 

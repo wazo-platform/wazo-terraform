@@ -29,6 +29,7 @@ displayname = Entity
 description = wizard configuration
 EOF
 
+    xivo-service enable default
     xivo-service restart
     xivo-configure
 }
