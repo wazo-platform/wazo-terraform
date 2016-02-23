@@ -23,10 +23,10 @@ Create a terraform.tfvars with your value:
 
     access_key = ""
     secret_key = ""
-    key_name = ""
     subnet_id = ""
-    private_key = ""
     vpc_id = ""
+    key_name = "" # The key Name you would like to use to connect to the EC2
+    private_key = "" # Path of your amazon private key to connect to the EC2
 
 Launch this command:
 
