@@ -17,6 +17,10 @@ resource "aws_instance" "xivo" {
         "${aws_security_group.xivo.id}"
     ]
     user_data = "${file(\"files/cloud-init.txt\")}"
+    connection {
+        user = "root"
+        private_key = "${var.private_key}"
+    }
 
     provisioner "local-exec" {
         command = "echo ${count.index}:${self.private_ip} >> private_ips.txt"
@@ -25,10 +29,6 @@ resource "aws_instance" "xivo" {
     provisioner "file" {
         source = "private_ips.txt"
         destination = "/tmp/private_ips.txt"
-        connection {
-            user = "root"
-            private_key = "${var.private_key}"
-        }
     }
 
     provisioner "remote-exec" {
@@ -37,10 +37,6 @@ resource "aws_instance" "xivo" {
             "bash /tmp/xivo_install_aws",
             "python /tmp/xivo_ctl_ha"
         ]
-        connection {
-            user = "admin"
-            private_key = "${var.private_key}"
-        }
     }
 }
 
@@ -94,54 +90,8 @@ resource "aws_security_group" "xivo" {
     tags {
         Name = "XiVO rules"
     }
-
 }
 
 output "ips" {
    value = "${aws_instance.xivo.0.public_ip} ${aws_instance.xivo.1.public_ip}"
-}
-
-variable "access_key" {
-    description = "AWS access key."
-}
-
-variable "secret_key" {
-    description = "AWS secret key."
-}
-
-variable "region" {
-    description = "The AWS region to create things in."
-    default = "us-east-1"
-}
-
-variable "key_name" {
-    description = "Name of the keypair to use in EC2."
-}
-
-variable "subnet_id" {
-    description = "Name of your subnet ID to use in EC2."
-}
-
-variable "private_key" {
-    description = "Path to your private key."
-}
-
-variable "instance_type" {
-    description = "Instance type in AWS."
-    default = "t2.micro"
-} 
-
-variable "vpc_id" {
-    description = "VPC ID"
-}
-
-variable "amazon_amis" {
-    description = "Amazon Linux Debian AMIs"
-    default = {
-        us-east-1 = "ami-8b9a63e0"
-    }
-}
-
-variable "count" {
-  default = 2
 }
