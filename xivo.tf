@@ -12,6 +12,9 @@ resource "aws_instance" "xivo" {
     tags {
         Name = "xivo-test-ha${count.index}"
     }
+    security_groups = [
+        "${aws_security_group.xivo.id}"
+    ]
     user_data = "${file(\"files/cloud-init.txt\")}"
 
     provisioner "remote-exec" {
@@ -56,6 +59,10 @@ variable "instance_type" {
     default = "t2.micro"
 } 
 
+variable "vpc_id" {
+    description = "VPC ID"
+}
+
 variable "amazon_amis" {
     description = "Amazon Linux Debian AMIs"
     default = {
@@ -66,7 +73,7 @@ variable "amazon_amis" {
 resource "aws_security_group" "xivo" {
     name = "xivo"
     description = "XiVO"
-    vpc_id = "${aws_vpc.default.id}"
+    vpc_id = "${var.vpc_id}"
 
     ingress {
         from_port = 22

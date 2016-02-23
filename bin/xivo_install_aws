@@ -29,8 +29,8 @@ displayname = Entity
 description = wizard configuration
 EOF
 
-    sudo xivo-configure
-    sudo xivo-service restart
+    xivo-service restart
+    xivo-configure
 }
 
 function install_xivo() {
