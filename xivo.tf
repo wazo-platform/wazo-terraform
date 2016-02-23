@@ -16,8 +16,7 @@ resource "aws_instance" "xivo" {
 
     provisioner "remote-exec" {
         inline = [
-        "wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/xivo_install_aws",
-        "sudo bash /home/admin/xivo_install_aws"
+        "echo FINISH"
         ]
 
         connection {
@@ -61,5 +60,30 @@ variable "amazon_amis" {
     description = "Amazon Linux Debian AMIs"
     default = {
         us-east-1 = "ami-8b9a63e0"
+    }
+}
+
+resource "aws_security_group" "xivo" {
+    name = "xivo"
+    description = "XiVO"
+    vpc_id = "${aws_vpc.default.id}"
+
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        self = true
+    }
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        self = true
+    }
+    ingress {
+        from_port = 443
+        to_port = 443
+        protocol = "tcp"
+        self = true
     }
 }

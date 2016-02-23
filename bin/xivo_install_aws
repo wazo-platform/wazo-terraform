@@ -1,16 +1,15 @@
 #!/bin/bash
 
 function configure_ha() {
-    wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/ha
-    sudo xivo-service restart
-    python /home/admin/ha
-    sudo xivo-service restart
+    wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_ctl_ha -O /tmp/xivo_ctl_ha
+    python /tmp/xivo_ctl_ha
+    xivo-service restart
 }
 
 function add_config_wizard() {
-    sudo apt-get -yyq install xivo-dev-scripts
+    apt-get -yyq install xivo-dev-scripts
     IP=$(/sbin/ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk {'print $1}')
-    sudo cat << EOF > /etc/xivo/xivo-tools/configure.d/default.ini
+    cat << EOF > /etc/xivo/xivo-tools/configure.d/default.ini
 [general]
 hostname = xivo
 domain = aws.proformatique.com
@@ -30,16 +29,13 @@ displayname = Entity
 description = wizard configuration
 EOF
 
-    sudo hostname xivo
     sudo xivo-configure
     sudo xivo-service restart
-    # Because the configure bug the fist time
-    sudo xivo-configure
 }
 
 function install_xivo() {
-    wget http://mirror.xivo.io/fai/xivo-migration/xivo_install_current.sh
-    sudo bash /home/admin/xivo_install_current.sh -r
+    wget http://mirror.xivo.io/fai/xivo-migration/xivo_install_current.sh -O /tmp/xivo_install_current.sh
+    bash /tmp/xivo_install_current.sh -r
 }
 
 function add_swap() {
