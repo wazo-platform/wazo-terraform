@@ -18,11 +18,20 @@ resource "aws_instance" "xivo" {
     ]
     user_data = "${file(\"files/cloud-init.txt\")}"
 
+    provisioner "local-exec" {
+        command = "echo ${count.index}:${self.private_ip} >> private_ips.txt"
+    }
+
+    provisioner "file" {
+        source = "private_ips.txt"
+        destination = "/tmp/private_ips.txt"
+    }
+
     provisioner "remote-exec" {
         inline = [
             "wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_install_aws -O /tmp/xivo_install_aws",
             "bash /tmp/xivo_install_aws",
-            "python /tmp/xivo_ctl_ha ${aws_instance.xivo.0.private_ip} ${aws_instance.xivo.1.private_ip}"
+            "python /tmp/xivo_ctl_ha"
         ]
 
         connection {
@@ -65,6 +74,10 @@ resource "aws_security_group" "xivo" {
         Name = "XiVO rules"
     }
 
+}
+
+output "ips" {
+   value = "${aws_instance.xivo.0.private_ip} ${aws_instance.xivo.1.private_ip}"
 }
 
 variable "access_key" {

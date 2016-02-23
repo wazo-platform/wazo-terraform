@@ -5,8 +5,16 @@ import sys
 import netifaces
 
 xivo_server = "http://localhost:8668"
-ip_master = sys.argv[1]
-ip_slave = sys.argv[2]
+ips_file = "/tmp/private_ips.txt"
+
+def get_ips():
+    i = dict()
+    with open(ips_file, 'r') as infile:
+        for line in infile:
+            index, ip = line.split(':')
+            ip = ip.strip()
+            i.update({index: ip})
+        return i
 
 def get_my_ip():
     return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
@@ -24,7 +32,9 @@ if get_ha_config()['node_type'] != 'disabled':
     print "Error this XiVO is not a fresh installation"
     sys.exit()
 
-if ip_master in get_my_ip():
-    update_ha_config('master', ip_slave)
+ips = get_ips()
+
+if ips['0'] in get_my_ip():
+    update_ha_config('master', ips['1'])
 else:
-    update_ha_config('slave', ip_master)
+    update_ha_config('slave', ips['0'])
