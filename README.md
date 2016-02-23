@@ -16,7 +16,8 @@ Install terraform (https://www.terraform.io/downloads.html)
 
 Init the terraform infrastructure.
 
-    terraform init https://github.com/sboily/xivo-aws
+    terraform init github.com/sboily/xivo-aws xivo-terraform
+    cd xivo-terraform
 
 Create a terraform.tfvars with your value:
 
