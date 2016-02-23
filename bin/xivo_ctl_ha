@@ -2,8 +2,14 @@
 
 import requests
 import sys
+import netifaces
 
 xivo_server = "http://localhost:8668"
+ip_master = sys.argv[1]
+ip_slave = sys.argv[2]
+
+def get_my_ip():
+    return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
 
 def get_ha_config():
     return requests.get("{}/get_ha_config".format(xivo_server)).json()
@@ -18,9 +24,7 @@ if get_ha_config()['node_type'] != 'disabled':
     print "Error this XiVO is not a fresh installation"
     sys.exit()
 
-update_ha_config('master', '192.168.32.81')
-
-if get_ha_config()['node_type'] != 'master':
-    print "Error this XiVO need to be a master"
-    sys.exit()
-
+if ip_master in get_my_ip():
+    update_ha_config('master', ip_slave)
+else:
+    update_ha_config('slave', ip_master)

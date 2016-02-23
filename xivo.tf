@@ -9,6 +9,7 @@ resource "aws_instance" "xivo" {
     instance_type = "${var.instance_type}"
     subnet_id = "${var.subnet_id}"
     key_name = "${var.key_name}"
+    count = "${var.count}"
     tags {
         Name = "xivo-test-ha${count.index}"
     }
@@ -20,7 +21,8 @@ resource "aws_instance" "xivo" {
     provisioner "remote-exec" {
         inline = [
             "wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_install_aws -O /tmp/xivo_install_aws",
-            "bash /tmp/xivo_install_aws"
+            "bash /tmp/xivo_install_aws",
+            "python /tmp/xivo_ctl_ha ${aws_instance.xivo.0.private_ip} ${aws_instance.xivo.1.private_ip}"
         ]
 
         connection {
@@ -28,6 +30,41 @@ resource "aws_instance" "xivo" {
             private_key = "${var.private_key}"
         }
     }
+}
+
+resource "aws_security_group" "xivo" {
+    name = "XiVO"
+    description = "XiVO rules"
+    vpc_id = "${var.vpc_id}"
+
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        from_port = 443
+        to_port = 443
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    tags {
+        Name = "XiVO rules"
+    }
+
 }
 
 variable "access_key" {
@@ -71,37 +108,6 @@ variable "amazon_amis" {
     }
 }
 
-resource "aws_security_group" "xivo" {
-    name = "XiVO"
-    description = "XiVO rules"
-    vpc_id = "${var.vpc_id}"
-
-    ingress {
-        from_port = 22
-        to_port = 22
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-    ingress {
-        from_port = 80
-        to_port = 80
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-    ingress {
-        from_port = 443
-        to_port = 443
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-    tags {
-        Name = "XiVO rules"
-    }
-
+variable "count" {
+  default = 2
 }

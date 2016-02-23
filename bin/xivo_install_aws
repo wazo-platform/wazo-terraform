@@ -2,8 +2,6 @@
 
 function configure_ha() {
     wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_ctl_ha -O /tmp/xivo_ctl_ha
-    python /tmp/xivo_ctl_ha
-    sudo xivo-service restart
 }
 
 function add_config_wizard() {
