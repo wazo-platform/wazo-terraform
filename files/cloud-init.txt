@@ -1,4 +1,5 @@
 #cloud-config
 hostname: xivo
 manage_etc_hosts: true
+disable_root: false
 output : { all : '| tee -a /var/log/cloud-init-output.log' } 
