@@ -9,7 +9,7 @@ function configure_ha() {
 function add_config_wizard() {
     sudo apt-get -yyq install xivo-dev-scripts
     IP=$(/sbin/ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk {'print $1}')
-    sudo cat << EOF > /etc/xivo/xivo-tools/configure.d/default.ini
+    sudo tee /etc/xivo/xivo-tools/configure.d/default.ini << EOF 
 [general]
 hostname = xivo
 domain = aws.proformatique.com
