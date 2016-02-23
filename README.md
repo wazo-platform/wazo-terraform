@@ -41,5 +41,7 @@ To remove instance:
 
     terraform plan -destroy
     terraform destroy
+
+Please remove private_ips.txt if you relaunch your instances.
     
 Have fun!
