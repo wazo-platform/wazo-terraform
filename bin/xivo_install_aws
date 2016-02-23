@@ -3,13 +3,13 @@
 function configure_ha() {
     wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_ctl_ha -O /tmp/xivo_ctl_ha
     python /tmp/xivo_ctl_ha
-    xivo-service restart
+    sudo xivo-service restart
 }
 
 function add_config_wizard() {
-    apt-get -yyq install xivo-dev-scripts
+    sudo apt-get -yyq install xivo-dev-scripts
     IP=$(/sbin/ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk {'print $1}')
-    cat << EOF > /etc/xivo/xivo-tools/configure.d/default.ini
+    sudo cat << EOF > /etc/xivo/xivo-tools/configure.d/default.ini
 [general]
 hostname = xivo
 domain = aws.proformatique.com
@@ -29,22 +29,22 @@ displayname = Entity
 description = wizard configuration
 EOF
 
-    xivo-service enable default
-    xivo-service restart
-    xivo-configure
+    sudo xivo-service enable default
+    sudo xivo-service restart
+    sudo xivo-configure
 }
 
 function install_xivo() {
     wget http://mirror.xivo.io/fai/xivo-migration/xivo_install_current.sh -O /tmp/xivo_install_current.sh
-    bash /tmp/xivo_install_current.sh -r
+    sudo bash /tmp/xivo_install_current.sh -r
 }
 
 function add_swap() {
-    dd if=/dev/zero of=/swap bs=1024 count=524288
-    chown root:root /swap
-    chmod 0600 /swap
-    mkswap /swap
-    swapon /swap
+    sudo dd if=/dev/zero of=/swap bs=1024 count=524288
+    sudo chown root:root /swap
+    sudo chmod 0600 /swap
+    sudo mkswap /swap
+    sudo swapon /swap
 }
 
 add_swap
