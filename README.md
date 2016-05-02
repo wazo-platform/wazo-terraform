@@ -1,12 +1,12 @@
 # xivo-aws
 
 This repo install and configure XiVO as a HA service on AWS (Amazon Cloud). The login for the
-web interface is superpass by default.
+web interface is **xivo** by default.
 
 Requirements
 ------------
 
-- Terraform
+- Terraform >= 0.6.15
 - AWS account
 
 Launch
