@@ -2,34 +2,7 @@
 
 function configure_ha() {
     wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_ctl_ha -O /tmp/xivo_ctl_ha
-}
-
-function add_config_wizard() {
-    sudo apt-get -yyq install xivo-dev-scripts
-    IP=$(/sbin/ifconfig eth0 | grep "inet addr" | awk -F: '{print $2}' | awk {'print $1}')
-    sudo tee /etc/xivo/xivo-tools/configure.d/default.ini << EOF 
-[general]
-hostname = xivo
-domain = aws.proformatique.com
-timezone = America/Montreal
-lang = fr_FR
-
-[network]
-iface = eth0
-address = $IP
-netmask = 255.255.0.0
-gateway = 10.0.0.1
-nameservers = 8.8.8.8, 9.9.9.9
-
-[entity]
-name = entity
-displayname = Entity
-description = wizard configuration
-EOF
-
-    sudo xivo-service enable default
-    sudo xivo-service restart
-    sudo xivo-configure
+    python /tmp/xivo_ctl_ha
 }
 
 function install_xivo() {
@@ -45,7 +18,12 @@ function add_swap() {
     sudo swapon /swap
 }
 
+function wizard() {
+    wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_wizard -O /tmp/xivo_wizard
+    python /tmp/xivo_wizard
+}
+
 add_swap
 install_xivo
-add_config_wizard
+wizard
 configure_ha

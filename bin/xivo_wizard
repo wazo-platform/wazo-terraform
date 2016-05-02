@@ -1,0 +1,43 @@
+#!/usr/bin/python
+
+from xivo_confd_client import Client
+
+
+c = Client('localhost', port=9486, https=True, verify_certificate=False)
+
+if c.wizard.get()['configured'] != True:
+    discover = c.wizard.discover()
+else:
+    print "Wizard already configured..."
+
+
+wizard = {
+  "admin_password": "xivo",
+  "license": True,
+  "timezone": discover['timezone'],
+  "language": "en_US",
+  "entity_name": "Proformatique",
+  "network": {
+    "hostname": discover['hostname'],
+    "domain": discover['domain'],
+    "interface": discover['interfaces'][0]['interface'],
+    "ip_address": discover['interfaces'][0]['ip_address'],
+    "netmask": discover['interfaces'][0]['netmask'],
+    "gateway": discover['gateways'][0]['gateway'],
+    "nameservers": discover['nameservers']
+  },
+  "context_incall": {
+    "display_name": "Incalls",
+    "did_length": 4
+  },
+  "context_internal": {
+    "display_name": "Default",
+    "number_start": "8000",
+    "number_end": "8100"
+  },
+  "context_outcall": {
+    "display_name": "Outcalls"
+  }
+}
+
+c.wizard.create(wizard)
