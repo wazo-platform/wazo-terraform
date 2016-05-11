@@ -1,13 +1,14 @@
-# xivo-aws
+# Install XiVO with Terraform
 
-This repo install and configure XiVO as a HA service on AWS (Amazon Cloud). The login for the
+This repo install and configure XiVO as a HA service on AWS (Amazon Cloud) or Openstack. The login for the
 web interface is **xivo** by default.
 
 Requirements
 ------------
 
-- Terraform >= 0.6.15
+- Terraform >= 0.6.16
 - AWS account
+- Openstack account
 
 Launch
 ------
@@ -21,6 +22,9 @@ Init the terraform infrastructure.
 
 Create a terraform.tfvars with your value:
 
+aws
+---
+
     access_key = ""
     secret_key = ""
     subnet_id = ""
@@ -28,19 +32,30 @@ Create a terraform.tfvars with your value:
     key_name = "" # The key Name you would like to use to connect to the EC2
     private_key = "" # Path of your amazon private key to connect to the EC2
 
+openstack
+---------
+
+    user_name = ""
+    password = ""
+    tenant_name = ""
+    auth_url = "http://keystone:5000/v3"
+    key_pair = ""
+    network = ""
+
+
 Launch this command:
 
-    terraform plan
-    terraform apply
+    terraform plan aws (or openstack)
+    terraform apply aws (or openstack)
 
 At this end to getting informations:
 
-    terraform show
+    terraform show aws (or openstack)
     
 To remove instance:
 
-    terraform plan -destroy
-    terraform destroy
+    terraform plan -destroy aws (or openstack)
+    terraform destroy aws (or openstack)
 
 Please remove private_ips.txt if you relaunch your instances.
     
