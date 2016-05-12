@@ -92,5 +92,5 @@ resource "aws_security_group" "xivo" {
 }
 
 output "ips" {
-   value = "${aws_instance.xivo.0.public_ip} ${aws_instance.xivo.1.public_ip}"
+   value = "${join(\" \",aws_instance.xivo.*.public_ip)}"
 }

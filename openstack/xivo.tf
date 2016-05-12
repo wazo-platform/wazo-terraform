@@ -25,6 +25,14 @@ resource "openstack_compute_instance_v2" "xivo" {
         name = "${var.network}"
     }
 
+    connection {
+        user = "root"
+    }
+
+    provisioner "local-exec" {
+        command =  "echo ${count.index}:${self.network.0.fixed_ip_v4} >> private_ips.txt ; sleep 2"
+    }
+
     provisioner "file" {
         source = "private_ips.txt"
         destination = "/tmp/private_ips.txt"
@@ -36,20 +44,9 @@ resource "openstack_compute_instance_v2" "xivo" {
             "bash /tmp/xivo_install_aws"
         ]
     }
-}
-
-resource "null_resource" "xivo" {
-
-    triggers {
-        cluster_instance_ids = "${join(",", openstack_compute_instance_v2.xivo.*.id)}"
-    }
-
-    provisioner "local-exec" {
-        command = "rm -f private_ips.txt ; echo 0:${openstack_compute_instance_v2.xivo.0.network.0.fixed_ip_v4} > private_ips.txt ; echo 1:${openstack_compute_instance_v2.xivo.1.network.0.fixed_ip_v4} >> private_ips.txt"
-    }
 
 }
 
 output "ips" {
-   value = "${openstack_compute_instance_v2.xivo.0.access_ip_v4} ${openstack_compute_instance_v2.xivo.1.access_ip_v4}"
+   value = "${join(\" \",openstack_compute_instance_v2.xivo.*.access_ip_v4)}"
 }
