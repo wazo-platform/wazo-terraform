@@ -17,7 +17,7 @@ Install terraform (https://www.terraform.io/downloads.html)
 
 Init the terraform infrastructure.
 
-    terraform init github.com/sboily/xivo-aws xivo-terraform
+    terraform init github.com/sboily/xivo-terraform xivo-terraform
     cd xivo-terraform
 
 Create a terraform.tfvars with your value:
@@ -45,18 +45,18 @@ openstack
 
 Launch this command:
 
-    terraform plan aws (or openstack)
-    terraform apply aws (or openstack)
+    terraform plan <aws|openstack>
+    terraform apply <aws|openstack>
 
 At this end to getting informations:
 
-    terraform show aws (or openstack)
-    
+    terraform show <aws|openstack>
+
 To remove instance:
 
-    terraform plan -destroy aws (or openstack)
-    terraform destroy aws (or openstack)
+    terraform plan -destroy <aws|openstack>
+    terraform destroy <aws|openstack>
 
 Please remove private_ips.txt if you relaunch your instances.
-    
+
 Have fun!
