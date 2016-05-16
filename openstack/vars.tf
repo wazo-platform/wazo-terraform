@@ -32,7 +32,7 @@ variable "image_id" {
     description = "Openstack image id."
     default = "b4e4e429-2b63-48fe-b885-855211cdf4e8"
 }
- 
+
 variable "flavor_id" {
     description = "Openstack flavor id."
     default = "2"
@@ -46,3 +46,6 @@ variable "network" {
     description = "Openstack network."
 }
 
+variable "key_file" {
+    description = "SSH private key file path"
+}
