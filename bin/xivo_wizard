@@ -1,14 +1,32 @@
 #!/usr/bin/python
 
+import time
+import sys
+from requests import RequestException
 from xivo_confd_client import Client
 
 
 c = Client('localhost', port=9486, https=True, verify_certificate=False)
 
-if c.wizard.get()['configured'] != True:
+last_exception = None
+for timeout in xrange(10):
+    try:
+        c.wizard.get()
+    except RequestException as e:
+        last_exception = e
+        time.sleep(1)
+    else:
+        break
+else:
+    print "Could not connect to xivo-confd"
+    raise last_exception
+
+
+if c.wizard.get()['configured'] is not True:
     discover = c.wizard.discover()
 else:
     print "Wizard already configured..."
+    sys.exit(0)
 
 
 wizard = {
