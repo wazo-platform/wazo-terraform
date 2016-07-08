@@ -1,7 +1,7 @@
 #!/bin/bash
 
 function configure_ha() {
-    wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_ctl_ha -O /tmp/xivo_ctl_ha
+    wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-terraform/master/bin/xivo_ctl_ha -O /tmp/xivo_ctl_ha
     python /tmp/xivo_ctl_ha
 }
 
@@ -22,7 +22,7 @@ function add_swap() {
 }
 
 function wizard() {
-    wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_wizard -O /tmp/xivo_wizard
+    wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-terraform/master/bin/xivo_wizard -O /tmp/xivo_wizard
     python /tmp/xivo_wizard
 }
 
