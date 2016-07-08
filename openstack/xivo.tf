@@ -41,7 +41,7 @@ resource "openstack_compute_instance_v2" "xivo" {
 
     provisioner "remote-exec" {
         inline = [
-            "wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-aws/master/bin/xivo_install_aws -O /tmp/xivo_install_aws",
+            "wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-terraform/master/bin/xivo_install_aws -O /tmp/xivo_install_aws",
             "bash /tmp/xivo_install_aws"
         ]
     }
