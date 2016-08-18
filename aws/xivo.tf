@@ -16,7 +16,7 @@ resource "aws_instance" "xivo" {
     security_groups = [
         "${aws_security_group.xivo.id}"
     ]
-    user_data = "${file(\"files/cloud-init.txt\")}"
+    user_data = "${file("files/cloud-init.txt")}"
     connection {
         user = "root"
         private_key = "${var.private_key}"
@@ -92,5 +92,5 @@ resource "aws_security_group" "xivo" {
 }
 
 output "ips" {
-   value = "${join(\" \",aws_instance.xivo.*.public_ip)}"
+   value = "${join(" ",aws_instance.xivo.*.public_ip)}"
 }
