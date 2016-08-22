@@ -19,7 +19,7 @@ resource "openstack_compute_instance_v2" "xivo" {
         "default"
     ]
 
-    user_data = "${file(\"files/cloud-init.txt\")}"
+    user_data = "${file("files/cloud-init.txt")}"
 
     network {
         name = "${var.network}"
@@ -49,5 +49,5 @@ resource "openstack_compute_instance_v2" "xivo" {
 }
 
 output "ips" {
-   value = "${join(\" \",openstack_compute_instance_v2.xivo.*.access_ip_v4)}"
+   value = "${join(" ",openstack_compute_instance_v2.xivo.*.access_ip_v4)}"
 }

@@ -40,12 +40,13 @@ openstack
     tenant_name = ""
     auth_url = "http://keystone:5000/v3"
     key_pair = ""
+    key_file = ""
     network = ""
 
 
 Launch this command:
 
-    terraform plan <aws|openstack>
+    terraform plan -var-file=terraform.tfvars <aws|openstack>
     terraform apply <aws|openstack>
 
 At this end to getting informations:
