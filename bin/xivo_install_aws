@@ -10,7 +10,11 @@ function install_xivo() {
     # To use rc version
     #sudo bash /tmp/xivo_install_current.sh -r
     # To use dev version
-    sudo bash /tmp/xivo_install_current.sh -d
+    if [ $gui -eq 1 ]; then
+        sudo bash /tmp/xivo_install_current.sh -d
+    else
+        sudo bash /tmp/xivo_install_current.sh -c -d
+    fi
 }
 
 function add_swap() {
@@ -26,7 +30,23 @@ function wizard() {
     python /tmp/xivo_wizard
 }
 
+gui=1
+
+while getopts ':c:' opt; do
+    case ${opt} in
+        c)
+            gui=0
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+
 add_swap
 install_xivo
-wizard
-configure_ha
+
+if [ $gui -eq 1 ]; then
+    wizard
+    configure_ha
+fi
