@@ -30,9 +30,22 @@ function wizard() {
     python /tmp/xivo_wizard
 }
 
+function usage() {
+    cat << EOF
+    This script is used to install XiVO on AWS
+
+    usage : $(basename $0) {-c}
+        without arg : install xivo
+        -c          : install console mode (without web interface)
+
+EOF
+    exit 1
+}
+
+
 gui=1
 
-while getopts ':c:' opt; do
+while getopts ':c' opt; do
     case ${opt} in
         c)
             gui=0
