@@ -6,14 +6,14 @@ function configure_ha() {
 }
 
 function install_xivo() {
-    wget http://mirror.xivo.io/fai/xivo-migration/xivo_install_current.sh -O /tmp/xivo_install_current.sh
+    wget http://mirror.wazo.community/fai/xivo-migration/wazo_install.sh -O /tmp/wazo_install.sh
     # To use rc version
-    #sudo bash /tmp/xivo_install_current.sh -r
+    #sudo bash /tmp/wazo_install.sh -r
     # To use dev version
     if [ $gui -eq 1 ]; then
-        sudo bash /tmp/xivo_install_current.sh -d
+        sudo bash /tmp/wazo_install.sh -d
     else
-        sudo bash /tmp/xivo_install_current.sh -c -d
+        sudo bash /tmp/wazo_install.sh -c -d
     fi
 }
 

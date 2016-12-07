@@ -1,6 +1,6 @@
-# Install XiVO with Terraform
+# Install Wazo with Terraform
 
-This repo install and configure XiVO as a HA service on AWS (Amazon Cloud) or Openstack. The login for the
+This repo install and configure Wazo as a HA service on AWS (Amazon Cloud) or Openstack. The login for the
 web interface is **xivo** by default.
 
 Requirements

@@ -29,7 +29,7 @@ def update_ha_config(node_type='disabled', remote_address=''):
     return requests.post('{}/update_ha_config'.format(xivo_server), json=config)
 
 if get_ha_config()['node_type'] != 'disabled':
-    print "Error this XiVO is not a fresh installation"
+    print "Error this Wazo is not a fresh installation"
     sys.exit()
 
 ips = get_ips()
