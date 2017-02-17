@@ -3,7 +3,8 @@ provider "openstack" {
     password = "${var.password}"
     tenant_name = "${var.tenant_name}"
     domain_name = "${var.domain_name}"
-    auth_url  = "${var.auth_url}"
+    auth_url = "${var.auth_url}"
+    endpoint_type = "${var.auth.endpoint_type}"
 }
 
 resource "openstack_compute_instance_v2" "xivo" {

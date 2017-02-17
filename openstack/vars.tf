@@ -23,6 +23,11 @@ variable "auth_url" {
     description = "Openstack keystone URL."
 }
 
+variable "endpoint_type" {
+    description = "Openstack endpoint type use from service catalog."
+    default = "internal"
+}
+
 variable "region" {
     description = "Openstack region name."
     default = "RegionOne"
