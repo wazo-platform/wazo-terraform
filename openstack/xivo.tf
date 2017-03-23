@@ -29,6 +29,7 @@ resource "openstack_compute_instance_v2" "xivo" {
     connection {
         user = "root"
         key_file = "${var.key_file}"
+        agent = false
     }
 
     provisioner "local-exec" {
