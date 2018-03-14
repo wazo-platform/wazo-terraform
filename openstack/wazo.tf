@@ -7,8 +7,8 @@ provider "openstack" {
     endpoint_type = "${var.endpoint_type}"
 }
 
-resource "openstack_compute_instance_v2" "xivo" {
-    name = "xivo-test-ha${count.index}"
+resource "openstack_compute_instance_v2" "wazo" {
+    name = "wazo-test-ha${count.index}"
     region = "${var.region}"
     image_id = "${var.image_id}"
     flavor_id = "${var.flavor_id}"
@@ -43,13 +43,13 @@ resource "openstack_compute_instance_v2" "xivo" {
 
     provisioner "remote-exec" {
         inline = [
-            "wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-terraform/master/bin/xivo_install_aws -O /tmp/xivo_install_aws",
-            "bash /tmp/xivo_install_aws"
+            "wget --no-check-certificate https://raw.githubusercontent.com/wazo-pbx/wazo-terraform/master/bin/wazo_install_aws -O /tmp/wazo_install_aws",
+            "bash /tmp/wazo_install_aws"
         ]
     }
 
 }
 
 output "ips" {
-   value = "${join(" ",openstack_compute_instance_v2.xivo.*.access_ip_v4)}"
+   value = "${join(" ",openstack_compute_instance_v2.wazo.*.access_ip_v4)}"
 }

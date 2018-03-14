@@ -4,17 +4,17 @@ provider "aws" {
     region = "${var.region}"
 }
 
-resource "aws_instance" "xivo" {
+resource "aws_instance" "wazo" {
     ami = "${lookup(var.amazon_amis, var.region)}"
     instance_type = "${var.instance_type}"
     subnet_id = "${var.subnet_id}"
     key_name = "${var.key_name}"
     count = "${var.count}"
     tags {
-        Name = "xivo-test-ha${count.index}"
+        Name = "wazo-test-ha${count.index}"
     }
     security_groups = [
-        "${aws_security_group.xivo.id}"
+        "${aws_security_group.wazo.id}"
     ]
     user_data = "${file("files/cloud-init.txt")}"
     connection {
@@ -33,15 +33,15 @@ resource "aws_instance" "xivo" {
 
     provisioner "remote-exec" {
         inline = [
-            "wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-terraform/master/bin/xivo_install_aws -O /tmp/xivo_install_aws",
-            "bash /tmp/xivo_install_aws"
+            "wget --no-check-certificate https://raw.githubusercontent.com/wazo-pbx/wazo-terraform/master/bin/wazo_install_aws -O /tmp/wazo_install_aws",
+            "bash /tmp/wazo_install_aws"
         ]
     }
 }
 
-resource "aws_security_group" "xivo" {
-    name = "XiVO"
-    description = "XiVO rules"
+resource "aws_security_group" "wazo" {
+    name = "Wazo"
+    description = "Wazo rules"
     vpc_id = "${var.vpc_id}"
 
     ingress {
@@ -87,10 +87,10 @@ resource "aws_security_group" "xivo" {
         cidr_blocks = ["0.0.0.0/0"]
     }
     tags {
-        Name = "XiVO rules"
+        Name = "Wazo rules"
     }
 }
 
 output "ips" {
-   value = "${join(" ",aws_instance.xivo.*.public_ip)}"
+   value = "${join(" ",aws_instance.wazo.*.public_ip)}"
 }

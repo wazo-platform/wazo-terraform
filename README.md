@@ -1,7 +1,7 @@
 # Install Wazo with Terraform
 
 This repo install and configure Wazo as a HA service on AWS (Amazon Cloud) or Openstack. The login for the
-web interface is **xivo** by default.
+web interface is **wazo** by default.
 
 Requirements
 ------------
@@ -17,8 +17,8 @@ Install terraform (https://www.terraform.io/downloads.html)
 
 Init the terraform infrastructure.
 
-    terraform init github.com/sboily/xivo-terraform xivo-terraform
-    cd xivo-terraform
+    terraform init github.com/wazo-pbx/wazo-terraform wazo-terraform
+    cd wazo-terraform
 
 Create a terraform.tfvars with your value:
 

@@ -30,11 +30,11 @@ else:
 
 
 wizard = {
-  "admin_password": "xivo",
+  "admin_password": "wazo",
   "license": True,
   "timezone": discover['timezone'],
   "language": "en_US",
-  "entity_name": "Proformatique",
+  "entity_name": "Wazo Inc",
   "network": {
     "hostname": discover['hostname'],
     "domain": discover['domain'],

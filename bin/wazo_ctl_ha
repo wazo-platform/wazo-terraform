@@ -4,7 +4,7 @@ import requests
 import sys
 import netifaces
 
-xivo_server = "http://localhost:8668"
+wazo_server = "http://localhost:8668"
 ips_file = "/tmp/private_ips.txt"
 
 def get_ips():
@@ -20,13 +20,13 @@ def get_my_ip():
     return netifaces.ifaddresses('eth0')[netifaces.AF_INET][0]['addr']
 
 def get_ha_config():
-    return requests.get("{}/get_ha_config".format(xivo_server)).json()
+    return requests.get("{}/get_ha_config".format(wazo_server)).json()
 
 def update_ha_config(node_type='disabled', remote_address=''):
     config = { 'node_type': node_type,
                'remote_address': remote_address
              }
-    return requests.post('{}/update_ha_config'.format(xivo_server), json=config)
+    return requests.post('{}/update_ha_config'.format(wazo_server), json=config)
 
 if get_ha_config()['node_type'] != 'disabled':
     print "Error this Wazo is not a fresh installation"

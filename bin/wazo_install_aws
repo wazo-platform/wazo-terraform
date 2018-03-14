@@ -1,12 +1,12 @@
 #!/bin/bash
 
 function configure_ha() {
-    wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-terraform/master/bin/xivo_ctl_ha -O /tmp/xivo_ctl_ha
-    python /tmp/xivo_ctl_ha
+    wget --no-check-certificate https://raw.githubusercontent.com/wazo-pbx/wazo-terraform/master/bin/wazo_ctl_ha -O /tmp/wazo_ctl_ha
+    python /tmp/wazo_ctl_ha
 }
 
-function install_xivo() {
-    wget http://mirror.wazo.community/fai/xivo-migration/wazo_install.sh -O /tmp/wazo_install.sh
+function install_wazo() {
+    wget http://mirror.wazo.community/fai/wazo-migration/wazo_install.sh -O /tmp/wazo_install.sh
     # To use rc version
     #sudo bash /tmp/wazo_install.sh -r
     # To use dev version
@@ -26,8 +26,8 @@ function add_swap() {
 }
 
 function wizard() {
-    wget --no-check-certificate https://raw.githubusercontent.com/sboily/xivo-terraform/master/bin/xivo_wizard -O /tmp/xivo_wizard
-    python /tmp/xivo_wizard
+    wget --no-check-certificate https://raw.githubusercontent.com/wazo-pbx/wazo-terraform/master/bin/wazo_wizard -O /tmp/wazo_wizard
+    python /tmp/wazo_wizard
 }
 
 function enable_asterisk_https() {
@@ -41,10 +41,10 @@ function enable_asterisk_rtp_ice() {
 
 function usage() {
     cat << EOF
-    This script is used to install XiVO on AWS
+    This script is used to install Wazo on AWS
 
     usage : $(basename $0) {-c}
-        without arg : install xivo
+        without arg : install wazo
         -c          : install console mode (without web interface)
 
 EOF
@@ -66,7 +66,7 @@ while getopts ':c' opt; do
 done
 
 add_swap
-install_xivo
+install_wazo
 
 if [ $gui -eq 0 ]; then
     enable_asterisk_https
