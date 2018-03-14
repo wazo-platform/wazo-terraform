@@ -35,7 +35,7 @@ variable "region" {
 
 variable "image_id" {
     description = "Openstack image id."
-    default = "072611a7-f55a-471c-8543-92cbdbe6e992"
+    default = "a992d22d-fbb8-49a8-9282-46e9d75a7fa1"
 }
 
 variable "flavor_id" {
