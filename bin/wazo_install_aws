@@ -6,7 +6,7 @@ function configure_ha() {
 }
 
 function install_wazo() {
-    wget http://mirror.wazo.community/fai/wazo-migration/wazo_install.sh -O /tmp/wazo_install.sh
+    wget http://mirror.wazo.community/fai/xivo-migration/wazo_install.sh -O /tmp/wazo_install.sh
     # To use rc version
     #sudo bash /tmp/wazo_install.sh -r
     # To use dev version
