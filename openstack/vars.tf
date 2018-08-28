@@ -54,3 +54,7 @@ variable "network" {
 variable "key_file" {
     description = "SSH private key file path"
 }
+
+variable "availability_zone" {
+    description = "Openstack availability zone."
+}

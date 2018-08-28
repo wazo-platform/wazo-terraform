@@ -13,6 +13,7 @@ resource "openstack_compute_instance_v2" "wazo" {
     image_id = "${var.image_id}"
     flavor_id = "${var.flavor_id}"
     key_pair = "${var.key_pair}"
+    availability_zone = "${var.availability_zone}"
 
     count = "${var.count}"
 
