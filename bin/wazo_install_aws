@@ -19,6 +19,7 @@ function install_wazo() {
 
 function post_actions() {
     wazo-auth-keys service update
+    wazo-service restart
 }
 
 function add_swap() {
