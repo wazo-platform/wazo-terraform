@@ -17,6 +17,10 @@ function install_wazo() {
     fi
 }
 
+function post_actions() {
+    wazo-auth-keys service update
+}
+
 function add_swap() {
     sudo dd if=/dev/zero of=/swap bs=1024 count=524288
     sudo chown root:root /swap
@@ -67,6 +71,7 @@ done
 
 add_swap
 install_wazo
+post_actions
 
 if [ $gui -eq 0 ]; then
     enable_asterisk_https
