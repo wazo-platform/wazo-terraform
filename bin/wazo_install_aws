@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 function configure_ha() {
     wget --no-check-certificate https://raw.githubusercontent.com/wazo-pbx/wazo-terraform/master/bin/wazo_ctl_ha -O /tmp/wazo_ctl_ha
