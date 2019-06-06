@@ -3,7 +3,7 @@
 import time
 import sys
 from requests import RequestException
-from xivo_confd_client import Client
+from wazo_confd_client import Client
 
 
 c = Client('localhost', port=9486, https=True, verify_certificate=False)
