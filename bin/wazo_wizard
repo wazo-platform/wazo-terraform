@@ -18,7 +18,7 @@ for timeout in xrange(10):
     else:
         break
 else:
-    print "Could not connect to xivo-confd"
+    print "Could not connect to wazo-confd"
     raise last_exception
 
 
