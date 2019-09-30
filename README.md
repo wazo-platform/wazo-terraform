@@ -17,7 +17,7 @@ Install terraform (https://www.terraform.io/downloads.html)
 
 Init the terraform infrastructure.
 
-    terraform init github.com/wazo-pbx/wazo-terraform wazo-terraform
+    terraform init github.com/wazo-platform/wazo-terraform wazo-terraform
     cd wazo-terraform
 
 Create a terraform.tfvars with your value:

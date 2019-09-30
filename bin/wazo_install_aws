@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 function configure_ha() {
-    wget --no-check-certificate https://raw.githubusercontent.com/wazo-pbx/wazo-terraform/master/bin/wazo_ctl_ha -O /tmp/wazo_ctl_ha
+    wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_ctl_ha -O /tmp/wazo_ctl_ha
     python /tmp/wazo_ctl_ha
 }
 
@@ -31,7 +31,7 @@ function add_swap() {
 }
 
 function wizard() {
-    wget --no-check-certificate https://raw.githubusercontent.com/wazo-pbx/wazo-terraform/master/bin/wazo_wizard -O /tmp/wazo_wizard
+    wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_wizard -O /tmp/wazo_wizard
     python /tmp/wazo_wizard
 }
 

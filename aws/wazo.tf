@@ -33,7 +33,7 @@ resource "aws_instance" "wazo" {
 
     provisioner "remote-exec" {
         inline = [
-            "wget --no-check-certificate https://raw.githubusercontent.com/wazo-pbx/wazo-terraform/master/bin/wazo_install_aws -O /tmp/wazo_install_aws",
+            "wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_install_aws -O /tmp/wazo_install_aws",
             "bash /tmp/wazo_install_aws"
         ]
     }
