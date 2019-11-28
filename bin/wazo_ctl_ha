@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import requests
 import sys
@@ -23,13 +23,14 @@ def get_ha_config():
     return requests.get("{}/get_ha_config".format(wazo_server)).json()
 
 def update_ha_config(node_type='disabled', remote_address=''):
-    config = { 'node_type': node_type,
-               'remote_address': remote_address
-             }
+    config = {
+        'node_type': node_type,
+        'remote_address': remote_address,
+    }
     return requests.post('{}/update_ha_config'.format(wazo_server), json=config)
 
 if get_ha_config()['node_type'] != 'disabled':
-    print "Error this Wazo is not a fresh installation"
+    print("Error this Wazo is not a fresh installation")
     sys.exit()
 
 ips = get_ips()

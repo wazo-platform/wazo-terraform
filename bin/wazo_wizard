@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import time
 import sys
@@ -18,14 +18,14 @@ for timeout in xrange(10):
     else:
         break
 else:
-    print "Could not connect to wazo-confd"
+    print("Could not connect to wazo-confd")
     raise last_exception
 
 
 if c.wizard.get()['configured'] is not True:
     discover = c.wizard.discover()
 else:
-    print "Wizard already configured..."
+    print("Wizard already configured...")
     sys.exit(0)
 
 
