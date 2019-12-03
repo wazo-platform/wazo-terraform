@@ -2,7 +2,7 @@
 
 function configure_ha() {
     wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_ctl_ha -O /tmp/wazo_ctl_ha
-    python /tmp/wazo_ctl_ha
+    python3 /tmp/wazo_ctl_ha
 }
 
 function install_wazo() {
@@ -32,7 +32,7 @@ function add_swap() {
 
 function wizard() {
     wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_wizard -O /tmp/wazo_wizard
-    python /tmp/wazo_wizard
+    python3 /tmp/wazo_wizard
 }
 
 function enable_asterisk_https() {
