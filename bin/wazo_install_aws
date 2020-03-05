@@ -6,15 +6,25 @@ function configure_ha() {
 }
 
 function install_wazo() {
-    wget http://mirror.wazo.community/fai/xivo-migration/wazo_install.sh -O /tmp/wazo_install.sh
-    # To use rc version
-    #sudo bash /tmp/wazo_install.sh -r
-    # To use dev version
-    if [ $gui -eq 1 ]; then
-        sudo bash /tmp/wazo_install.sh -d
-    else
-        sudo bash /tmp/wazo_install.sh -c -d
-    fi
+    apt-get update
+    apt-get install -y git ansible
+    cd /usr/src
+    git clone https://github.com/wazo-platform/wazo-ansible.git
+    cd wazo-ansible
+
+    apt-get install -yq virtualenv python-pip python
+    virtualenv /var/lib/wazo-ansible-venv
+    source /var/lib/wazo-ansible-venv/bin/activate
+    pip install 'ansible==2.7.9'
+    deactivate
+
+    /var/lib/wazo-ansible-venv/bin/ansible-galaxy install -r requirements-postgresql.yml
+    /var/lib/wazo-ansible-venv/bin/ansible-playbook -i inventories/uc-engine uc-engine.yml
+
+    rm -rf /var/lib/wazo-ansible-venv
+    cd /usr/src
+    rm -rf /usr/src/wazo-ansible
+    apt-get purge --autoremove -yq python-pip virtualenv
 }
 
 function post_actions() {
