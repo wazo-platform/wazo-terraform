@@ -24,7 +24,7 @@ function install_wazo() {
     rm -rf /var/lib/wazo-ansible-venv
     cd /usr/src
     rm -rf /usr/src/wazo-ansible
-    apt-get purge --autoremove -yq python-pip virtualenv git
+    apt-get purge --autoremove -yq python-pip virtualenv
 }
 
 function post_actions() {
