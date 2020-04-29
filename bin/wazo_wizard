@@ -9,7 +9,7 @@ from wazo_confd_client import Client
 c = Client('localhost', port=9486, https=True, verify_certificate=False)
 
 last_exception = None
-for timeout in xrange(10):
+for timeout in range(10):
     try:
         c.wizard.get()
     except RequestException as e:
