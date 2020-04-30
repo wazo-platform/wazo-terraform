@@ -6,7 +6,7 @@ from requests import RequestException
 from wazo_confd_client import Client
 
 
-c = Client('localhost', port=9486, https=True, verify_certificate=False)
+c = Client('localhost', port=9486, prefix=None, https=False)
 
 last_exception = None
 for timeout in range(10):
