@@ -7,24 +7,17 @@ function configure_ha() {
 
 function install_wazo() {
     apt-get update
-    apt-get install -yq git
+    apt-get install -yq git ansible
     cd /usr/src
     git clone https://github.com/wazo-platform/wazo-ansible.git
     cd wazo-ansible
 
-    apt-get install -yq virtualenv python-pip python
-    virtualenv /var/lib/wazo-ansible-venv
-    source /var/lib/wazo-ansible-venv/bin/activate
-    pip install 'ansible==2.7.9'
-    deactivate
+    ansible-galaxy install -r requirements-postgresql.yml
+    ansible-playbook -i inventories/uc-engine uc-engine.yml
 
-    /var/lib/wazo-ansible-venv/bin/ansible-galaxy install -r requirements-postgresql.yml
-    /var/lib/wazo-ansible-venv/bin/ansible-playbook -i inventories/uc-engine uc-engine.yml
-
-    rm -rf /var/lib/wazo-ansible-venv
     cd /usr/src
     rm -rf /usr/src/wazo-ansible
-    apt-get purge --autoremove -yq python-pip virtualenv
+    apt-get purge --autoremove -yq ansible
 }
 
 function post_actions() {
@@ -51,7 +44,7 @@ function enable_asterisk_https() {
 
 function enable_asterisk_rtp_ice() {
     echo "icesupport=yes" >> /etc/asterisk/rtp.conf
-    echo "stunaddr=stun.l.google.com:19302" >> /etc/asterisk/rtp.conf
+    echo "stunaddr=stun.wazo.io:443" >> /etc/asterisk/rtp.conf
 }
 
 function usage() {
