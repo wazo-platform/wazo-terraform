@@ -28,9 +28,9 @@ resource "openstack_compute_instance_v2" "wazo" {
   }
 
   connection {
-    user     = "root"
-    key_file = "${var.key_file}"
-    agent    = false
+    user        = "root"
+    private_key = "${file("${var.key_file}")}"
+    agent       = false
   }
 
   provisioner "local-exec" {
