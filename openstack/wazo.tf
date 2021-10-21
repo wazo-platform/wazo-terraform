@@ -34,7 +34,11 @@ resource "openstack_compute_instance_v2" "wazo" {
   }
 
   provisioner "local-exec" {
-    command = "echo ${count.index}:${self.network.0.fixed_ip_v4} >> private_ips.txt ; sleep 2"
+    command = "echo ${count.index}:${self.network.0.fixed_ip_v4} >> private_ips.txt"
+  }
+
+  provisioner "local-exec" {
+    command = "bin/auto-retry ssh -i ${var.key_file} root@${self.network.0.fixed_ip_v4} -o PreferredAuthentications=publickey -o StrictHostKeyChecking=no /usr/bin/cloud-init status --wait"
   }
 
   provisioner "file" {
