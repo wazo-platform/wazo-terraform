@@ -46,9 +46,13 @@ resource "openstack_compute_instance_v2" "wazo" {
     destination = "/tmp/private_ips.txt"
   }
 
+  provisioner "file" {
+    source      = "bin/wazo_install_aws"
+    destination = "/tmp/wazo_install_aws"
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_install_aws -O /tmp/wazo_install_aws",
       "sudo bash /tmp/wazo_install_aws"
     ]
   }

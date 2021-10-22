@@ -28,11 +28,13 @@ function install_wazo() {
     # apt-get purge --autoremove -yq python-pip virtualenv
 
 
-    apt-get install wget unzip ansible
-    cd $(mktemp -d)
-    wget https://github.com/wazo-platform/wazo-ansible/archive/master.zip
-    unzip master.zip
-    cd wazo-ansible
+    DEBIAN_FRONTEND=noninteractive apt-get install -yq ansible
+    cd /usr/local/src
+    wget https://github.com/wazo-platform/wazo-ansible/archive/master.tar.gz -O - | tar -xz
+    cd wazo-ansible-master
+
+    ansible-galaxy install -r requirements-postgresql.yml
+    ansible-playbook -i inventories/uc-engine uc-engine.yml
 }
 
 function post_actions() {
