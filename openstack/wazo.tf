@@ -28,7 +28,7 @@ resource "openstack_compute_instance_v2" "wazo" {
   }
 
   connection {
-    user        = "root"
+    user        = "jenkins"
     private_key = "${file("${var.key_file}")}"
     agent       = false
   }
@@ -38,7 +38,7 @@ resource "openstack_compute_instance_v2" "wazo" {
   }
 
   provisioner "local-exec" {
-    command = "bin/auto-retry ssh -i ${var.key_file} root@${self.network.0.fixed_ip_v4} -o PreferredAuthentications=publickey -o StrictHostKeyChecking=no /usr/bin/cloud-init status --wait"
+    command = "bin/auto-retry ssh -i ${var.key_file} jenkins@${self.network.0.fixed_ip_v4} -o PreferredAuthentications=publickey -o StrictHostKeyChecking=no /usr/bin/cloud-init status --wait"
   }
 
   provisioner "file" {
@@ -49,7 +49,7 @@ resource "openstack_compute_instance_v2" "wazo" {
   provisioner "remote-exec" {
     inline = [
       "wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_install_aws -O /tmp/wazo_install_aws",
-      "bash /tmp/wazo_install_aws"
+      "sudo bash /tmp/wazo_install_aws"
     ]
   }
 
