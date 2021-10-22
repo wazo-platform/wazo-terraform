@@ -38,7 +38,7 @@ resource "openstack_compute_instance_v2" "wazo" {
   }
 
   provisioner "local-exec" {
-    command = "bin/auto-retry ssh -i ${var.key_file} jenkins@${self.network.0.fixed_ip_v4} -o PreferredAuthentications=publickey -o StrictHostKeyChecking=no /usr/bin/cloud-init status --wait"
+    command = "bin/auto-retry ssh -o UserKnownHostsFile=/dev/null -o PreferredAuthentications=publickey -o StrictHostKeyChecking=no -i ${var.key_file} jenkins@${self.network.0.fixed_ip_v4} /usr/bin/cloud-init status --wait"
   }
 
   provisioner "file" {
