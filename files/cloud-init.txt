@@ -1,12 +1,14 @@
 #cloud-config
 hostname: wazo
 manage_etc_hosts: true
+disable_root: false
 output : { all : '| tee -a /var/log/cloud-init-output.log' }
 users:
   - name: root
     lock-passwd: false
     inactive: false
     system: false
+    shell: /bin/bash
     ssh-authorized-keys:
       - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDF+58PJ/ocRGJDWAsXRreMVmXVpFEIRQCQeNrg0mLq9088HrQl04xSkTtwWdoqdGVbN10x57lMJlEu0QX/ZydHF4itTCFlexa0V47eoarB8ble5aEoyOexxNb1W0QMhSdyF6fXKY8Ws79hUnvkNBPF5KxToPbVy4S1WXvbwEp0g5dkXypUCo+2YTchEcoQf3pB2T+lNMF4lzpkBfCtWj04kaejwTdKZQnolM5ki1D4GjrKoTmGXROzwIpkIxi0zorHrWU2NAObGuHAQNLfAqQqU4zrsgttiisehlCHz8xhogpI/XDo6DSf5WMAobqMp/uDlU7Gge2RQNsPxVyzn/L1 jenkins@jenkins
   - name: jenkins
