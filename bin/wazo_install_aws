@@ -35,10 +35,6 @@ function wizard() {
     python3 /tmp/wazo_wizard
 }
 
-function enable_asterisk_https() {
-    sed -i 's/^tlsbindaddr=127\.0\.0\.1:5040/tlsbindaddr=0\.0\.0\.0:5040/' /etc/asterisk/http.conf
-}
-
 function enable_asterisk_rtp_ice() {
     echo "icesupport=yes" >> /etc/asterisk/rtp.conf
     echo "stunaddr=stun.l.google.com:19302" >> /etc/asterisk/rtp.conf
@@ -75,7 +71,6 @@ install_wazo
 post_actions
 
 if [ $gui -eq 0 ]; then
-    enable_asterisk_https
     enable_asterisk_rtp_ice
 fi
 
