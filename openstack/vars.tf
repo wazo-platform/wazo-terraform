@@ -57,7 +57,3 @@ variable "key_file" {
 variable "availability_zone" {
   description = "Openstack availability zone."
 }
-
-variable "floating_ip_pool" {
-  description = "Openstack floating IPs pool"
-}
