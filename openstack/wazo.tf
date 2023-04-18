@@ -15,7 +15,7 @@ resource "openstack_compute_instance_v2" "wazo" {
   key_pair          = "${var.key_pair}"
   availability_zone = "${var.availability_zone}"
 
-  count = "${var.count}"
+  count = "${var.instance_nb}"
 
   security_groups = [
     "default"
