@@ -1,25 +1,25 @@
 provider "aws" {
-  access_key = "${var.access_key}"
-  secret_key = "${var.secret_key}"
-  region     = "${var.region}"
+  access_key = var.access_key
+  secret_key = var.secret_key
+  region     = var.region
 }
 
 resource "aws_instance" "wazo" {
-  ami           = "${lookup(var.amazon_amis, var.region)}"
-  instance_type = "${var.instance_type}"
-  subnet_id     = "${var.subnet_id}"
-  key_name      = "${var.key_name}"
-  count         = "${var.count}"
+  ami           = lookup(var.amazon_amis, var.region)
+  instance_type = var.instance_type
+  subnet_id     = var.subnet_id
+  key_name      = var.key_name
+  count         = var.count
   tags {
     Name = "wazo-test-ha${count.index}"
   }
   security_groups = [
     "${aws_security_group.wazo.id}"
   ]
-  user_data = "${file("files/cloud-init.txt")}"
+  user_data = file("files/cloud-init.txt")
   connection {
     user        = "root"
-    private_key = "${var.private_key}"
+    private_key = var.private_key
   }
 
   provisioner "local-exec" {
@@ -42,7 +42,7 @@ resource "aws_instance" "wazo" {
 resource "aws_security_group" "wazo" {
   name        = "Wazo"
   description = "Wazo rules"
-  vpc_id      = "${var.vpc_id}"
+  vpc_id      = var.vpc_id
 
   ingress {
     from_port   = 22
@@ -92,5 +92,5 @@ resource "aws_security_group" "wazo" {
 }
 
 output "ips" {
-  value = "${join(" ", aws_instance.wazo.*.public_ip)}"
+  value = join(" ", aws_instance.wazo.*.public_ip)
 }
