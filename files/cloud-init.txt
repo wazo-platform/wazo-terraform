@@ -1,4 +1,15 @@
 #cloud-config
+apt:
+  # Rewrite sources.list:
+  # - To remove backports not removed from base debian image and older cloud-init version
+  # - To rewrite security suite using an old syntax (not working anymore)
+  sources_list: |
+    deb $MIRROR $RELEASE main
+    deb-src $MIRROR $RELEASE main
+    deb $MIRROR $RELEASE-updates main
+    deb-src $MIRROR $RELEASE-updates main
+    deb ${SECURITY}debian-security $RELEASE-security main
+    deb-src ${SECURITY}debian-security $RELEASE-security main
 hostname: wazo
 manage_etc_hosts: true
 disable_root: false
