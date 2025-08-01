@@ -1,0 +1,26 @@
+---
+- hosts: all
+  tasks:
+    - name: Install GPG
+      become: yes
+      apt:
+        name: [gnupg]
+        state: present
+    - name: Install Hashicorp Key
+      become: yes
+      apt_key:
+        url: https://apt.releases.hashicorp.com/gpg
+        state: present
+        keyring: /usr/share/keyrings/hashicorp-archive-keyring.gpg
+    - name: Install Hashicorp Repository
+      become: yes
+      apt_repository:
+        repo: deb [arch=amd64 signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com bullseye main
+        state: present
+        filename: hashicorp
+        update_cache: true
+    - name: Install Terraform
+      become: yes
+      apt:
+        name: [terraform]
+        state: present
