@@ -31,7 +31,7 @@ resource "openstack_compute_instance_v2" "wazo" {
     "default"
   ]
 
-  user_data = file("files/cloud-init.txt")
+  user_data = file("../files/cloud-init.txt")
 
   network {
     name = var.network
@@ -39,25 +39,26 @@ resource "openstack_compute_instance_v2" "wazo" {
 
   connection {
     user        = "jenkins"
+    host        = self.network.0.fixed_ip_v4
     private_key = file("${var.key_file}")
     agent       = false
   }
 
   provisioner "local-exec" {
-    command = "echo ${count.index}:${self.network.0.fixed_ip_v4} >> private_ips.txt"
+    command = "echo ${count.index}:${self.network.0.fixed_ip_v4} >> ../private_ips.txt"
   }
 
   provisioner "local-exec" {
-    command = "bin/auto-retry ssh -o UserKnownHostsFile=/dev/null -o PreferredAuthentications=publickey -o StrictHostKeyChecking=no -i ${var.key_file} jenkins@${self.network.0.fixed_ip_v4} /usr/bin/cloud-init status --wait"
+    command = "../bin/auto-retry ssh -o UserKnownHostsFile=/dev/null -o PreferredAuthentications=publickey -o StrictHostKeyChecking=no -i ${var.key_file} jenkins@${self.network.0.fixed_ip_v4} /usr/bin/cloud-init status --wait"
   }
 
   provisioner "file" {
-    source      = "private_ips.txt"
+    source      = "../private_ips.txt"
     destination = "/tmp/private_ips.txt"
   }
 
   provisioner "file" {
-    source      = "bin/wazo_install_aws"
+    source      = "../bin/wazo_install_aws"
     destination = "/tmp/wazo_install_aws"
   }
 
