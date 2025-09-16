@@ -3,14 +3,14 @@
 # See https://pre-commit.com/hooks.html for more hooks
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.2.0
+    rev: v5.0.0
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer
       - id: check-json
       - id: check-yaml
       - id: check-added-large-files
-  - repo: git://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.45.0
+  - repo: https://github.com/antonbabenko/pre-commit-terraform
+    rev: v1.99.5
     hooks:
       - id: terraform_fmt
