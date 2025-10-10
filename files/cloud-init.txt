@@ -8,10 +8,11 @@ apt:
     deb-src $MIRROR $RELEASE main
     deb $MIRROR $RELEASE-updates main
     deb-src $MIRROR $RELEASE-updates main
-    deb ${SECURITY}debian-security $RELEASE-security main
-    deb-src ${SECURITY}debian-security $RELEASE-security main
-hostname: wazo
-manage_etc_hosts: true
+    deb $${SECURITY}debian-security $RELEASE-security main
+    deb-src $${SECURITY}debian-security $RELEASE-security main
+preserve_hostname: false
+fqdn: ${hostname}.wazo.cloud
+prefer_fqdn_over_hostname: true
 disable_root: false
 output : { all : '| tee -a /var/log/cloud-init-output.log' }
 users:

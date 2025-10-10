@@ -1,7 +1,9 @@
 #!/bin/bash -e
 
 function configure_ha() {
-    wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_ctl_ha -O /tmp/wazo_ctl_ha
+    if [ ! -f /tmp/wazo_ctl_ha ]; then
+        wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_ctl_ha -O /tmp/wazo_ctl_ha
+    fi
     python3 /tmp/wazo_ctl_ha
 }
 
@@ -31,7 +33,9 @@ function add_swap() {
 }
 
 function wizard() {
-    wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_wizard -O /tmp/wazo_wizard
+    if [ ! -f /tmp/wazo_wizard ]; then
+        wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_wizard -O /tmp/wazo_wizard
+    fi
     python3 /tmp/wazo_wizard
 }
 
