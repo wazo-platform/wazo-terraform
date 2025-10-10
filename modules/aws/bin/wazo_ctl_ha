@@ -1,0 +1,48 @@
+#!/usr/bin/python3
+
+import re
+import requests
+import sys
+import netifaces
+
+wazo_server = "http://localhost:8668"
+ips_file = "/tmp/private_ips.txt"
+
+def get_ips():
+    i = dict()
+    with open(ips_file, 'r') as infile:
+        for line in infile:
+            index, ip = line.split(':')
+            ip = ip.strip()
+            i.update({index: ip})
+        return i
+
+def get_my_ip():
+    interface = [i for i in netifaces.interfaces() if re.search(r'ens\d+', i)][0]
+    return netifaces.ifaddresses(interface)[netifaces.AF_INET][0]['addr']
+
+def get_ha_config():
+    return requests.get("{}/get_ha_config".format(wazo_server)).json()
+
+def update_ha_config(node_type='disabled', remote_address=''):
+    config = {
+        'node_type': node_type,
+        'remote_address': remote_address,
+    }
+    return requests.post('{}/update_ha_config'.format(wazo_server), json=config)
+
+if get_ha_config()['node_type'] != 'disabled':
+    print("Error this Wazo is not a fresh installation")
+    sys.exit()
+
+ips = get_ips()
+
+if len(ips.keys()) > 1:
+    if ips['0'] in get_my_ip():
+        print("Sending /update_ha_config master " + ips['1'])
+        update_ha_config('master', ips['1'])
+        print("Done")
+    else:
+        print("Sending /update_ha_config slave " + ips['0'])
+        update_ha_config('slave', ips['0'])
+        print("Done")

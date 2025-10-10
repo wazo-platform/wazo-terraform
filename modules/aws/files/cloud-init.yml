@@ -1,0 +1,14 @@
+#cloud-config
+swap:
+  filename: /swap
+  size: 512M
+  maxsize: 512M
+preserve_hostname: false
+fqdn: ${hostname}.wazo.cloud
+prefer_fqdn_over_hostname: true
+disable_root: false
+output : { all : '| tee -a /var/log/cloud-init-output.log' }
+runcmd:
+  - sed -i -e '/^#PermitRootLogin/s/^.*$/PermitRootLogin yes/' /etc/ssh/sshd_config
+  - systemctl restart sshd.service
+
