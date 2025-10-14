@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_key_pair" "wazo" {
-  key_name   = "wazo-terraform"
+  key_name   = var.names_prefix == "" ? "wazo-terraform" : "${var.names_prefix}-wazo-terraform"
   public_key = file(var.public_key_path)
 }
 
@@ -15,6 +15,11 @@ data "aws_ami" "wazo" {
     name   = "name"
     values = [var.amazon_ami_name_filter]
   }
+
+  filter {
+    name   = "architecture"
+    values = [var.amazon_ami_architecture]
+  }
 }
 
 resource "aws_instance" "wazo" {
@@ -24,7 +29,7 @@ resource "aws_instance" "wazo" {
   key_name      = aws_key_pair.wazo.key_name
   count         = var.nb_instances
   tags = {
-    Name = "wazo-test-ha${count.index}"
+    Name = var.names_prefix == "" ? "wazo-stack-${count.index}" : "${var.names_prefix}-wazo-stack-${count.index}"
   }
   security_groups = [
     "${aws_security_group.wazo.id}"
@@ -69,8 +74,8 @@ resource "aws_instance" "wazo" {
 }
 
 resource "aws_security_group" "wazo" {
-  name        = "Wazo"
-  description = "Wazo rules"
+  name        = var.names_prefix == "" ? "wazo" : "${var.names_prefix}-wazo"
+  description = "Wazo stack rules"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -116,7 +121,7 @@ resource "aws_security_group" "wazo" {
     cidr_blocks = ["0.0.0.0/0"]
   }
   tags = {
-    Name = "Wazo rules"
+    Name = var.names_prefix == "" ? "wazo" : "${var.names_prefix}-wazo"
   }
 }
 

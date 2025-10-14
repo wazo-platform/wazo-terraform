@@ -1,3 +1,9 @@
+variable "names_prefix" {
+  description = "Prefix to add to all names of managed resources"
+  type        = string
+  default     = ""
+}
+
 variable "region" {
   description = "The AWS region to create things in."
   default     = "us-east-1"
@@ -20,6 +26,12 @@ variable "amazon_ami_name_filter" {
   description = "Filter to apply on names to retrieve AMI"
   type        = string
   default     = "debian-11*"
+}
+
+variable "amazon_ami_architecture" {
+  description = "Which architecture to filter ami on. Should be coherent with instance_type variable."
+  type        = string
+  default     = "x86_64"
 }
 
 variable "nb_instances" {
