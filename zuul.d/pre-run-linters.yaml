@@ -15,7 +15,7 @@
     - name: Install Hashicorp Repository
       become: yes
       apt_repository:
-        repo: deb [arch=amd64 signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com bullseye main
+        repo: deb [arch=amd64 signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com bookworm main
         state: present
         filename: hashicorp
         update_cache: true
