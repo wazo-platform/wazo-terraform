@@ -1,14 +1,17 @@
 - job:
-    name: wazo-tox-linters-310-terraform
+    name: wazo-tox-linters-py311-terraform
     parent: tox-linters
     pre-run: zuul.d/pre-run-linters.yaml
 
 - project:
     wazo-check:
       jobs:
-        - wazo-tox-linters-310-terraform:
-            nodeset: pod-python-310
+        - wazo-tox-linters-py311-terraform:
+            nodeset: vm-debian-12-m1s
     wazo-gate:
       jobs:
-        - wazo-tox-linters-310-terraform:
-            nodeset: pod-python-310
+        - wazo-tox-linters-py311-terraform:
+            nodeset: vm-debian-12-m1s
+    auto-merge:
+      jobs:
+        - noop
