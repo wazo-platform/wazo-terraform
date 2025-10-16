@@ -12,3 +12,6 @@
       jobs:
         - wazo-tox-linters-py311-terraform:
             nodeset: vm-debian-12-m1s
+    auto-merge:
+      jobs:
+        - noop
