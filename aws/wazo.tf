@@ -1,25 +1,45 @@
 provider "aws" {
-  access_key = var.access_key
-  secret_key = var.secret_key
-  region     = var.region
+  region = var.region
+}
+
+resource "aws_key_pair" "wazo" {
+  key_name   = var.names_prefix == "" ? "wazo-terraform" : "${var.names_prefix}-wazo-terraform"
+  public_key = file(var.public_key_path)
+}
+
+data "aws_ami" "wazo" {
+  most_recent = true
+  owners      = ["self", "amazon"]
+
+  filter {
+    name   = "name"
+    values = [var.amazon_ami_name_filter]
+  }
+
+  filter {
+    name   = "architecture"
+    values = [var.amazon_ami_architecture]
+  }
 }
 
 resource "aws_instance" "wazo" {
-  ami           = lookup(var.amazon_amis, var.region)
+  ami           = data.aws_ami.wazo.id
   instance_type = var.instance_type
   subnet_id     = var.subnet_id
-  key_name      = var.key_name
-  count         = var.count
-  tags {
-    Name = "wazo-test-ha${count.index}"
+  key_name      = aws_key_pair.wazo.key_name
+  count         = var.nb_instances
+  tags = {
+    Name = var.names_prefix == "" ? "wazo-stack-${count.index}" : "${var.names_prefix}-wazo-stack-${count.index}"
   }
   security_groups = [
     "${aws_security_group.wazo.id}"
   ]
-  user_data = file("files/cloud-init.txt")
+  user_data = file("../files/cloud-init.txt")
   connection {
+    host        = self.public_ip
     user        = "root"
-    private_key = var.private_key
+    type        = "ssh"
+    private_key = file(var.private_key_path)
   }
 
   provisioner "local-exec" {
@@ -31,17 +51,31 @@ resource "aws_instance" "wazo" {
     destination = "/tmp/private_ips.txt"
   }
 
+  provisioner "file" {
+    source      = "../bin/wazo_install_aws"
+    destination = "/tmp/wazo_install_aws"
+  }
+
+  provisioner "file" {
+    source      = "../bin/wazo_ctl_ha"
+    destination = "/tmp/wazo_ctl_ha"
+  }
+
+  provisioner "file" {
+    source      = "../bin/wazo_wizard"
+    destination = "/tmp/wazo_wizard"
+  }
+
   provisioner "remote-exec" {
     inline = [
-      "wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_install_aws -O /tmp/wazo_install_aws",
-      "bash /tmp/wazo_install_aws"
+      "bash /tmp/wazo_install_aws",
     ]
   }
 }
 
 resource "aws_security_group" "wazo" {
-  name        = "Wazo"
-  description = "Wazo rules"
+  name        = var.names_prefix == "" ? "wazo" : "${var.names_prefix}-wazo"
+  description = "Wazo stack rules"
   vpc_id      = var.vpc_id
 
   ingress {
@@ -86,8 +120,8 @@ resource "aws_security_group" "wazo" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-  tags {
-    Name = "Wazo rules"
+  tags = {
+    Name = var.names_prefix == "" ? "wazo" : "${var.names_prefix}-wazo"
   }
 }
 
