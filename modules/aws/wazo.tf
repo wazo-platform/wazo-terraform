@@ -3,9 +3,10 @@ provider "aws" {
 }
 
 locals {
-  instance_name = var.names_prefix == "" ? "wazo-stack" : "${var.names_prefix}-wazo-stack"
-  keypair_name  = var.names_prefix == "" ? "wazo-terraform" : "${var.names_prefix}-wazo-terraform"
-  sg_name       = var.names_prefix == "" ? "wazo" : "${var.names_prefix}-wazo"
+  private_ips_file = "/tmp/${substr(uuid(), 0, 8)}"
+  instance_name    = var.names_prefix == "" ? "wazo-stack" : "${var.names_prefix}-wazo-stack"
+  keypair_name     = var.names_prefix == "" ? "wazo-terraform" : "${var.names_prefix}-wazo-terraform"
+  sg_name          = var.names_prefix == "" ? "wazo" : "${var.names_prefix}-wazo"
   allowed_ingress = concat(
     var.public_stacks ? ["0.0.0.0/0"] : [],
     var.additional_allowed_cidr_ranges,
@@ -57,26 +58,26 @@ resource "aws_instance" "wazo" {
   }
 
   provisioner "local-exec" {
-    command = "echo ${count.index}:${self.private_ip} >> private_ips.txt"
+    command = "echo ${count.index}:${self.private_ip} >> ${local.private_ips_file}"
   }
 
   provisioner "file" {
-    source      = "private_ips.txt"
+    source      = local.private_ips_file
     destination = "/tmp/private_ips.txt"
   }
 
   provisioner "file" {
-    source      = "../bin/wazo_install_aws"
+    source      = "${path.module}/bin/wazo_install_aws"
     destination = "/tmp/wazo_install_aws"
   }
 
   provisioner "file" {
-    source      = "../bin/wazo_ctl_ha"
+    source      = "${path.module}/bin/wazo_ctl_ha"
     destination = "/tmp/wazo_ctl_ha"
   }
 
   provisioner "file" {
-    source      = "../bin/wazo_wizard"
+    source      = "${path.module}/bin/wazo_wizard"
     destination = "/tmp/wazo_wizard"
   }
 
