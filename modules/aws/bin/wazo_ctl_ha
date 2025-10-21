@@ -37,7 +37,8 @@ if get_ha_config()['node_type'] != 'disabled':
 
 ips = get_ips()
 
-if ips['0'] in get_my_ip():
-    update_ha_config('master', ips['1'])
-else:
-    update_ha_config('slave', ips['0'])
+if len(ips.keys()) > 1:
+    if ips['0'] in get_my_ip():
+        update_ha_config('master', ips['1'])
+    else:
+        update_ha_config('slave', ips['0'])
