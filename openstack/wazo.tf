@@ -31,7 +31,7 @@ resource "openstack_compute_instance_v2" "wazo" {
     "default"
   ]
 
-  user_data = file("../files/cloud-init.txt")
+  user_data = templatefile("../files/cloud-init.txt", { hostname = "wazo" })
 
   network {
     name = var.network
