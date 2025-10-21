@@ -1,0 +1,43 @@
+#cloud-config
+apt:
+  # Rewrite sources.list:
+  # - To remove backports not removed from base debian image and older cloud-init version
+  # - To rewrite security suite using an old syntax (not working anymore)
+  sources_list: |
+    deb $MIRROR $RELEASE main
+    deb-src $MIRROR $RELEASE main
+    deb $MIRROR $RELEASE-updates main
+    deb-src $MIRROR $RELEASE-updates main
+    deb $${SECURITY}debian-security $RELEASE-security main
+    deb-src $${SECURITY}debian-security $RELEASE-security main
+preserve_hostname: false
+fqdn: ${hostname}.wazo.cloud
+prefer_fqdn_over_hostname: true
+disable_root: false
+output : { all : '| tee -a /var/log/cloud-init-output.log' }
+users:
+  - name: root
+    lock-passwd: false
+    inactive: false
+    system: false
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDF+58PJ/ocRGJDWAsXRreMVmXVpFEIRQCQeNrg0mLq9088HrQl04xSkTtwWdoqdGVbN10x57lMJlEu0QX/ZydHF4itTCFlexa0V47eoarB8ble5aEoyOexxNb1W0QMhSdyF6fXKY8Ws79hUnvkNBPF5KxToPbVy4S1WXvbwEp0g5dkXypUCo+2YTchEcoQf3pB2T+lNMF4lzpkBfCtWj04kaejwTdKZQnolM5ki1D4GjrKoTmGXROzwIpkIxi0zorHrWU2NAObGuHAQNLfAqQqU4zrsgttiisehlCHz8xhogpI/XDo6DSf5WMAobqMp/uDlU7Gge2RQNsPxVyzn/L1 jenkins@jenkins
+  - name: jenkins
+    lock-passwd: false
+    inactive: false
+    system: false
+    shell: /bin/bash
+    sudo:
+      - ALL=(ALL) NOPASSWD:ALL
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDF+58PJ/ocRGJDWAsXRreMVmXVpFEIRQCQeNrg0mLq9088HrQl04xSkTtwWdoqdGVbN10x57lMJlEu0QX/ZydHF4itTCFlexa0V47eoarB8ble5aEoyOexxNb1W0QMhSdyF6fXKY8Ws79hUnvkNBPF5KxToPbVy4S1WXvbwEp0g5dkXypUCo+2YTchEcoQf3pB2T+lNMF4lzpkBfCtWj04kaejwTdKZQnolM5ki1D4GjrKoTmGXROzwIpkIxi0zorHrWU2NAObGuHAQNLfAqQqU4zrsgttiisehlCHz8xhogpI/XDo6DSf5WMAobqMp/uDlU7Gge2RQNsPxVyzn/L1 jenkins@jenkins
+
+ssh_pwauth: yes
+chpasswd:
+  expire: false
+  list:
+    - root:secret
+runcmd:
+  - sed -i -e '/^#PermitRootLogin/s/^.*$/PermitRootLogin yes/' /etc/ssh/sshd_config
+  - systemctl restart sshd.service

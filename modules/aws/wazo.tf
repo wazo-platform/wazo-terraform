@@ -48,7 +48,7 @@ resource "aws_instance" "wazo" {
   security_groups = [
     "${aws_security_group.wazo.id}"
   ]
-  user_data = templatefile("../files/cloud-init.txt", { hostname = "${local.instance_name}-${count.index}" })
+  user_data = templatefile("${path.module}/files/cloud-init.txt", { hostname = "${local.instance_name}-${count.index}" })
   connection {
     host        = var.public_stacks ? self.public_ip : self.private_ip
     user        = "root"
