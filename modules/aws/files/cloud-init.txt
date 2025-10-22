@@ -38,6 +38,13 @@ chpasswd:
   expire: false
   list:
     - root:secret
+apt:
+  sources:
+    wazo:
+      source: "deb [signed-by=$KEY_FILE] https://mirror.wazo.community/debian wazo-dev-tools main"
+      key: "https://mirror.wazo.community/wazo_current.key"
+packages:
+  - wazo-dev-ssh-pubkeys
 runcmd:
   - sed -i -e '/^#PermitRootLogin/s/^.*$/PermitRootLogin yes/' /etc/ssh/sshd_config
   - systemctl restart sshd.service
