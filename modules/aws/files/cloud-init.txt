@@ -41,3 +41,6 @@ chpasswd:
 runcmd:
   - sed -i -e '/^#PermitRootLogin/s/^.*$/PermitRootLogin yes/' /etc/ssh/sshd_config
   - systemctl restart sshd.service
+%{ for command in additional_commands ~}
+  - ${ command }
+%{ endfor ~}

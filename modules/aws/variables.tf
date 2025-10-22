@@ -60,3 +60,8 @@ variable "private_key_path" {
   description = "Path to ssh private key file to use to deploy instances."
   type        = string
 }
+
+variable "cloud_init_additional_commands" {
+  type = list(string)
+  default = []
+}
