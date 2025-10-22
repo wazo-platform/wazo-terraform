@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 
+import re
 import requests
 import sys
 import netifaces
@@ -17,7 +18,8 @@ def get_ips():
         return i
 
 def get_my_ip():
-    return netifaces.ifaddresses('ens3')[netifaces.AF_INET][0]['addr']
+    interface = [i for i in netifaces.interfaces() if re.search(r'ens\d+', i)][0]
+    return netifaces.ifaddresses(interface)[netifaces.AF_INET][0]['addr']
 
 def get_ha_config():
     return requests.get("{}/get_ha_config".format(wazo_server)).json()
