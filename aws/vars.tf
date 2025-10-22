@@ -37,7 +37,7 @@ variable "vpc_id" {
 variable "amazon_ami_name_filter" {
   description = "Filter to apply on names to retrieve AMI"
   type        = string
-  default     = "debian-11*"
+  default     = "debian-12*"
 }
 
 variable "amazon_ami_architecture" {
