@@ -70,6 +70,8 @@ while getopts ':c' opt; do
     esac
 done
 
+cloud-init status --wait
+
 echo "### DEBUG sources.list ###"
 ls -l /etc/apt/sources.list.d
 cat /etc/apt/sources.list.d/*
