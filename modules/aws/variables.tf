@@ -37,7 +37,7 @@ variable "vpc_id" {
 variable "amazon_ami_name_filter" {
   description = "Filter to apply on names to retrieve AMI"
   type        = string
-  default     = "debian-11*"
+  default     = "debian-12*"
 }
 
 variable "amazon_ami_architecture" {
@@ -62,6 +62,7 @@ variable "private_key_path" {
 }
 
 variable "cloud_config_files" {
-  type = list(string)
-  default = []
+  description = "Cloud-config files to append to wazo instance cloud-config."
+  type        = list(string)
+  default     = []
 }

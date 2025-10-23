@@ -51,6 +51,7 @@ function usage() {
     usage : $(basename $0) {-c}
         without arg : install wazo
         -c          : install console mode (without web interface)
+        -h          : setup ha automatically
 
 EOF
     exit 1
@@ -58,11 +59,15 @@ EOF
 
 
 gui=1
+ha_mode=0
 
-while getopts ':c' opt; do
+while getopts ':ch' opt; do
     case ${opt} in
         c)
             gui=0
+            ;;
+        h)
+            ha_mode=1
             ;;
         *)
             usage
@@ -84,7 +89,7 @@ if [ $gui -eq 0 ]; then
     enable_asterisk_rtp_ice
 fi
 
-if [ $gui -eq 1 ]; then
-    # wizard
+if [ $ha_mode -eq 1 ]; then
+    wizard
     configure_ha
 fi
