@@ -70,6 +70,10 @@ while getopts ':c' opt; do
     esac
 done
 
+echo "### DEBUG sources.list ###"
+ls -l /etc/apt/sources.list.d
+cat /etc/apt/sources.list.d/*
+
 add_swap
 install_wazo
 post_actions
