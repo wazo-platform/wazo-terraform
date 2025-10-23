@@ -16,4 +16,5 @@ module "wazo" {
   nb_instances                   = var.nb_instances
   public_key_path                = var.public_key_path
   private_key_path               = var.private_key_path
+  ha_mode                        = true
 }

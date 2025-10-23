@@ -66,3 +66,9 @@ variable "cloud_config_files" {
   type        = list(string)
   default     = []
 }
+
+variable "ha_mode" {
+  description = "Enable automatic ha configuration between created instances. Will need 2 instance to work."
+  type        = bool
+  default     = false
+}
