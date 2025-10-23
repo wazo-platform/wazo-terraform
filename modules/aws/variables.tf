@@ -61,7 +61,7 @@ variable "private_key_path" {
   type        = string
 }
 
-variable "cloud_init_additional_commands" {
+variable "cloud_config_files" {
   type = list(string)
   default = []
 }

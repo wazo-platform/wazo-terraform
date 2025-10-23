@@ -37,6 +37,22 @@ data "aws_subnet" "this" {
   id = var.subnet_id
 }
 
+data "template_cloudinit_config" "wazo" {
+  count = var.nb_instances
+  dynamic "part" {
+    for_each = concat(
+      ["${path.module}/files/cloud-init.yml"],
+      var.cloud_config_files,
+    )
+    iterator = filename
+    content {
+      content_type = "text/cloud-config"
+      content      = templatefile(filename.value, {hostname = "${local.instance_name}-${count.index}"})
+      merge_type   = "list(append)+dict(recurse_list)+str()"
+    }
+  }
+}
+
 resource "aws_instance" "wazo" {
   ami           = data.aws_ami.wazo.id
   instance_type = var.instance_type
@@ -49,13 +65,7 @@ resource "aws_instance" "wazo" {
   security_groups = [
     "${aws_security_group.wazo.id}"
   ]
-  user_data = templatefile(
-    "${path.module}/files/cloud-init.txt",
-    {
-      hostname = "${local.instance_name}-${count.index}",
-      additional_commands = var.cloud_init_additional_commands,
-    }
-  )
+  user_data_base64 = data.template_cloudinit_config.wazo[count.index].rendered
   connection {
     host        = var.public_stacks ? self.public_ip : self.private_ip
     user        = "root"

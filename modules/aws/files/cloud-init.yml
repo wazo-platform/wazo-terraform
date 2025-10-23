@@ -39,8 +39,5 @@ chpasswd:
   list:
     - root:secret
 runcmd:
-%{ for command in additional_commands ~}
-  - ${ command }
-%{ endfor ~}
   - sed -i -e '/^#PermitRootLogin/s/^.*$/PermitRootLogin yes/' /etc/ssh/sshd_config
   - systemctl restart sshd.service
