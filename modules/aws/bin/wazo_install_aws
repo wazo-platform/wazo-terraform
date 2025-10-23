@@ -83,6 +83,6 @@ if [ $gui -eq 0 ]; then
 fi
 
 if [ $gui -eq 1 ]; then
-    wizard
+    # wizard
     configure_ha
 fi
