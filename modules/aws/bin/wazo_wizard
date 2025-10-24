@@ -1,0 +1,63 @@
+#!/usr/bin/python3
+
+import time
+import sys
+from requests import RequestException
+from wazo_confd_client import Client
+
+
+c = Client('localhost', port=9486, prefix=None, https=False)
+
+last_exception = None
+for timeout in range(10):
+    try:
+        c.wizard.get()
+    except RequestException as e:
+        last_exception = e
+        time.sleep(1)
+    else:
+        break
+else:
+    print("Could not connect to wazo-confd")
+    raise last_exception
+
+
+if c.wizard.get()['configured'] is not True:
+    discover = c.wizard.discover()
+else:
+    print("Wizard already configured...")
+    sys.exit(0)
+
+
+wizard = {
+  "admin_password": "wazo",
+  "license": True,
+  "timezone": discover['timezone'],
+  "language": "en_US",
+  "entity_name": "Wazo Inc",
+  "network": {
+    "hostname": discover['hostname'],
+    "domain": discover['domain'],
+    "interface": discover['interfaces'][0]['interface'],
+    "ip_address": discover['interfaces'][0]['ip_address'],
+    "netmask": discover['interfaces'][0]['netmask'],
+    "gateway": discover['gateways'][0]['gateway'],
+    "nameservers": discover['nameservers']
+  },
+  "context_incall": {
+    "display_name": "Incalls",
+    "did_length": 4
+  },
+  "context_internal": {
+    "display_name": "Default",
+    "number_start": "8000",
+    "number_end": "8100"
+  },
+  "context_outcall": {
+    "display_name": "Outcalls"
+  }
+}
+
+print("Creating wizard")
+c.wizard.create(wizard)
+print("Done")

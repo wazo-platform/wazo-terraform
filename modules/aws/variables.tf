@@ -37,7 +37,7 @@ variable "vpc_id" {
 variable "amazon_ami_name_filter" {
   description = "Filter to apply on names to retrieve AMI"
   type        = string
-  default     = "debian-11*"
+  default     = "debian-12*"
 }
 
 variable "amazon_ami_architecture" {
@@ -59,4 +59,37 @@ variable "public_key_path" {
 variable "private_key_path" {
   description = "Path to ssh private key file to use to deploy instances."
   type        = string
+}
+
+variable "cloud_config_files" {
+  description = "Cloud-config files to append to wazo instance cloud-config."
+  type        = list(string)
+  default     = []
+}
+
+variable "ha_mode" {
+  description = "Enable automatic ha configuration between created instances. Will need 2 instance to work."
+  type        = bool
+  default     = false
+}
+
+variable "custom_security_group_id" {
+  type    = string
+  default = null
+}
+
+variable "custom_security_group" {
+  type    = bool
+  default = false
+}
+
+variable "enable_root_password" {
+  type    = bool
+  default = false
+}
+
+variable "root_password" {
+  sensitive = true
+  type      = string
+  default   = ""
 }

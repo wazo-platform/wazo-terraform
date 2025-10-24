@@ -24,14 +24,6 @@ function post_actions() {
     wazo-service restart
 }
 
-function add_swap() {
-    sudo dd if=/dev/zero of=/swap bs=1024 count=524288
-    sudo chown root:root /swap
-    sudo chmod 0600 /swap
-    sudo mkswap /swap
-    sudo swapon /swap
-}
-
 function wizard() {
     if [ ! -f /tmp/wazo_wizard ]; then
         wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_wizard -O /tmp/wazo_wizard
@@ -51,6 +43,7 @@ function usage() {
     usage : $(basename $0) {-c}
         without arg : install wazo
         -c          : install console mode (without web interface)
+        -h          : setup ha automatically
 
 EOF
     exit 1
@@ -58,11 +51,15 @@ EOF
 
 
 gui=1
+ha_mode=0
 
-while getopts ':c' opt; do
+while getopts ':ch' opt; do
     case ${opt} in
         c)
             gui=0
+            ;;
+        h)
+            ha_mode=1
             ;;
         *)
             usage
@@ -70,7 +67,8 @@ while getopts ':c' opt; do
     esac
 done
 
-add_swap
+cloud-init status --wait
+
 install_wazo
 post_actions
 
@@ -78,7 +76,11 @@ if [ $gui -eq 0 ]; then
     enable_asterisk_rtp_ice
 fi
 
-if [ $gui -eq 1 ]; then
+if [ $ha_mode -eq 1 ]; then
+    echo "Launching wizard setup"
     wizard
+    echo "Done"
+    echo "Launching ha configuration"
     configure_ha
+    echo "Done"
 fi
