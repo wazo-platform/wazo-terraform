@@ -11,11 +11,7 @@ output "instances_private_ips" {
 }
 
 output "security_group_id" {
-  value = aws_security_group.wazo.id
-}
-
-output "security_group_arn" {
-  value = aws_security_group.wazo.arn
+  value = var.custom_security_group_id == null ? aws_security_group.wazo.0.id : var.custom_security_group_id
 }
 
 output "keypair_name" {

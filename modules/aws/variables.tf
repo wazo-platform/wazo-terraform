@@ -72,3 +72,8 @@ variable "ha_mode" {
   type        = bool
   default     = false
 }
+
+variable "custom_security_group_id" {
+  type    = string
+  default = null
+}

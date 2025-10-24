@@ -139,9 +139,7 @@ resource "aws_instance" "wazo" {
   tags = {
     Name = "${local.instance_name}-${count.index}"
   }
-  security_groups = [
-    "${aws_security_group.wazo.id}"
-  ]
+  security_groups = var.custom_security_group_id == null ? [aws_security_group.wazo.0.id] : [var.custom_security_group_id]
   user_data_base64 = data.template_cloudinit_config.wazo[count.index].rendered
   connection {
     host        = var.public_stacks ? self.public_ip : self.private_ip
@@ -182,6 +180,7 @@ resource "aws_instance" "wazo" {
 }
 
 resource "aws_security_group" "wazo" {
+  count       = var.custom_security_group_id == null ? 1 : 0
   name        = local.sg_name
   description = "Wazo stack rules"
   vpc_id      = var.vpc_id
