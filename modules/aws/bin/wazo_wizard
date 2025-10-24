@@ -58,4 +58,6 @@ wizard = {
   }
 }
 
+print("Creating wizard")
 c.wizard.create(wizard)
+print("Done")

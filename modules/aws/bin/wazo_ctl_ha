@@ -39,6 +39,10 @@ ips = get_ips()
 
 if len(ips.keys()) > 1:
     if ips['0'] in get_my_ip():
+        print("Sending /update_ha_config master " + ips['1'])
         update_ha_config('master', ips['1'])
+        print("Done")
     else:
+        print("Sending /update_ha_config slave " + ips['0'])
         update_ha_config('slave', ips['0'])
+        print("Done")
