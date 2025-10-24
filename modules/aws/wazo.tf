@@ -174,7 +174,7 @@ resource "aws_instance" "wazo" {
 
   provisioner "remote-exec" {
     inline = [
-      "bash /tmp/wazo_install_aws ${var.ha_mode ? "-h" : ""}",
+      "bash -x /tmp/wazo_install_aws ${var.ha_mode ? "-h" : ""}",
     ]
   }
 }

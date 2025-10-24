@@ -86,6 +86,10 @@ if [ $gui -eq 0 ]; then
 fi
 
 if [ $ha_mode -eq 1 ]; then
+    echo "Launching wizard setup"
     wizard
+    echo "Done"
+    echo "Launching ha configuration"
     configure_ha
+    echo "Done"
 fi
