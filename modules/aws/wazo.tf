@@ -180,7 +180,7 @@ resource "aws_instance" "wazo" {
 }
 
 resource "aws_security_group" "wazo" {
-  count       = var.custom_security_group_id == null ? 1 : 0
+  count       = var.custom_security_group ? 0 : 1
   name        = local.sg_name
   description = "Wazo stack rules"
   vpc_id      = var.vpc_id

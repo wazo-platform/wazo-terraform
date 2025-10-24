@@ -77,3 +77,8 @@ variable "custom_security_group_id" {
   type    = string
   default = null
 }
+
+variable "custom_security_group" {
+  type    = bool
+  default = false
+}
