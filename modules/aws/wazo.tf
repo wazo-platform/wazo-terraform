@@ -120,11 +120,15 @@ data "template_cloudinit_config" "wazo" {
     for_each = concat(
       ["${path.module}/files/cloud-init.yml"],
       var.cloud_config_files,
+      var.enable_root_password ? ["${path.module}/files/cloud-init-root-password.yml"] : []
     )
     iterator = filename
     content {
       content_type = "text/cloud-config"
-      content      = templatefile(filename.value, {hostname = "${local.instance_name}-${count.index}"})
+      content      = templatefile(filename.value, {
+        hostname             = "${local.instance_name}-${count.index}",
+        root_password        = var.root_password,
+      })
       merge_type   = "list(append)+dict(recurse_list)+str()"
     }
   }

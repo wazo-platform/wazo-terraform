@@ -82,3 +82,14 @@ variable "custom_security_group" {
   type    = bool
   default = false
 }
+
+variable "enable_root_password" {
+  type    = bool
+  default = false
+}
+
+variable "root_password" {
+  sensitive = true
+  type      = string
+  default   = ""
+}
