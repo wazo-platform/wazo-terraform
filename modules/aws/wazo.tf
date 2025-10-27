@@ -14,78 +14,78 @@ locals {
   allowed_ingress_private = var.additional_allowed_cidr_ranges
   sip_ports = [
     {
-      port        = 5060
-      protocol    = "tcp"
+      port     = 5060
+      protocol = "tcp"
     },
     {
-      port        = 5060
-      protocol    = "udp"
+      port     = 5060
+      protocol = "udp"
     },
     {
-      port        = 8067
-      protocol    = "tcp"
+      port     = 8067
+      protocol = "tcp"
     },
     {
-      port        = 9498
-      protocol    = "tcp"
+      port     = 9498
+      protocol = "tcp"
     },
   ]
   webrtc_ports = [
     {
-      port        = 3478
-      protocol    = "udp"
+      port     = 3478
+      protocol = "udp"
     },
     {
-      port        = 19302
-      protocol    = "udp"
+      port     = 19302
+      protocol = "udp"
     },
     {
-      port        = 5349
-      protocol    = "udp"
+      port     = 5349
+      protocol = "udp"
     },
     {
-      port        = 443
-      protocol    = "udp"
+      port     = 443
+      protocol = "udp"
     },
   ]
   stack_ports = [
     {
-      port        = 80
-      protocol    = "tcp"
+      port     = 80
+      protocol = "tcp"
     },
     {
-      port        = 443
-      protocol    = "tcp"
+      port     = 443
+      protocol = "tcp"
     },
     {
-      port        = 123
-      protocol    = "udp"
+      port     = 123
+      protocol = "udp"
     },
     {
-      port        = 8667
-      protocol    = "tcp"
+      port     = 8667
+      protocol = "tcp"
     },
     {
-      port        = 8642
-      protocol    = "tcp"
+      port     = 8642
+      protocol = "tcp"
     },
     {
-      port        = 9486
-      protocol    = "tcp"
+      port     = 9486
+      protocol = "tcp"
     },
     {
-      port        = 9497
-      protocol    = "tcp"
+      port     = 9497
+      protocol = "tcp"
     },
   ]
   private_stack_ports = [
     {
-      port        = 5038
-      protocol    = "tcp"
+      port     = 5038
+      protocol = "tcp"
     },
     {
-      port        = 5039
-      protocol    = "tcp"
+      port     = 5039
+      protocol = "tcp"
     },
   ]
 }
@@ -125,11 +125,11 @@ data "template_cloudinit_config" "wazo" {
     iterator = filename
     content {
       content_type = "text/cloud-config"
-      content      = templatefile(filename.value, {
-        hostname             = "${local.instance_name}-${count.index}",
-        root_password        = var.root_password,
+      content = templatefile(filename.value, {
+        hostname      = "${local.instance_name}-${count.index}",
+        root_password = var.root_password,
       })
-      merge_type   = "list(append)+dict(recurse_list)+str()"
+      merge_type = "list(append)+dict(recurse_list)+str()"
     }
   }
 }
@@ -143,7 +143,7 @@ resource "aws_instance" "wazo" {
   tags = {
     Name = "${local.instance_name}-${count.index}"
   }
-  security_groups = var.custom_security_group_id == null ? [aws_security_group.wazo.0.id] : [var.custom_security_group_id]
+  security_groups  = var.custom_security_group_id == null ? [aws_security_group.wazo.0.id] : [var.custom_security_group_id]
   user_data_base64 = data.template_cloudinit_config.wazo[count.index].rendered
   connection {
     host        = var.public_stacks ? self.public_ip : self.private_ip
@@ -199,9 +199,9 @@ resource "aws_security_group" "wazo" {
     )
   }
   ingress {
-    from_port   = 5432
-    to_port     = 5432
-    protocol    = "tcp"
+    from_port = 5432
+    to_port   = 5432
+    protocol  = "tcp"
     cidr_blocks = concat(
       [data.aws_subnet.this.cidr_block],
       local.allowed_ingress_private,
@@ -210,9 +210,9 @@ resource "aws_security_group" "wazo" {
   dynamic "ingress" {
     for_each = local.sip_ports
     content {
-      from_port   = ingress.value["port"]
-      to_port     = ingress.value["port"]
-      protocol    = ingress.value["protocol"]
+      from_port = ingress.value["port"]
+      to_port   = ingress.value["port"]
+      protocol  = ingress.value["protocol"]
       cidr_blocks = concat(
         [data.aws_subnet.this.cidr_block],
         local.allowed_ingress_public,
@@ -222,9 +222,9 @@ resource "aws_security_group" "wazo" {
   dynamic "ingress" {
     for_each = local.webrtc_ports
     content {
-      from_port   = ingress.value["port"]
-      to_port     = ingress.value["port"]
-      protocol    = ingress.value["protocol"]
+      from_port = ingress.value["port"]
+      to_port   = ingress.value["port"]
+      protocol  = ingress.value["protocol"]
       cidr_blocks = concat(
         [data.aws_subnet.this.cidr_block],
         local.allowed_ingress_public,
@@ -234,9 +234,9 @@ resource "aws_security_group" "wazo" {
   dynamic "ingress" {
     for_each = local.stack_ports
     content {
-      from_port   = ingress.value["port"]
-      to_port     = ingress.value["port"]
-      protocol    = ingress.value["protocol"]
+      from_port = ingress.value["port"]
+      to_port   = ingress.value["port"]
+      protocol  = ingress.value["protocol"]
       cidr_blocks = concat(
         [data.aws_subnet.this.cidr_block],
         local.allowed_ingress_public,
@@ -246,9 +246,9 @@ resource "aws_security_group" "wazo" {
   dynamic "ingress" {
     for_each = local.private_stack_ports
     content {
-      from_port   = ingress.value["port"]
-      to_port     = ingress.value["port"]
-      protocol    = ingress.value["protocol"]
+      from_port = ingress.value["port"]
+      to_port   = ingress.value["port"]
+      protocol  = ingress.value["protocol"]
       cidr_blocks = concat(
         [data.aws_subnet.this.cidr_block],
         local.allowed_ingress_private,

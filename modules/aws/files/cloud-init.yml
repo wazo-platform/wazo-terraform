@@ -11,4 +11,3 @@ output : { all : '| tee -a /var/log/cloud-init-output.log' }
 runcmd:
   - sed -i -e '/^#PermitRootLogin/s/^.*$/PermitRootLogin yes/' /etc/ssh/sshd_config
   - systemctl restart sshd.service
-
