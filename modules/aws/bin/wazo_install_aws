@@ -1,0 +1,86 @@
+#!/bin/bash -e
+
+function configure_ha() {
+    if [ ! -f /tmp/wazo_ctl_ha ]; then
+        wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_ctl_ha -O /tmp/wazo_ctl_ha
+    fi
+    python3 /tmp/wazo_ctl_ha
+}
+
+function install_wazo() {
+    # NOTE: --allow-releaseinfo-change is only needed on debian < 10.10
+    apt-get update --allow-releaseinfo-change
+    DEBIAN_FRONTEND=noninteractive apt-get install -yq ansible
+    cd /usr/local/src
+    wget https://github.com/wazo-platform/wazo-ansible/archive/master.tar.gz -O - | tar -xz
+    cd wazo-ansible-master
+
+    ansible-galaxy install -r requirements-postgresql.yml
+    ansible-playbook -i inventories/uc-engine uc-engine.yml
+}
+
+function post_actions() {
+    wazo-auth-keys service update
+    wazo-service restart
+}
+
+function wizard() {
+    if [ ! -f /tmp/wazo_wizard ]; then
+        wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/bin/wazo_wizard -O /tmp/wazo_wizard
+    fi
+    python3 /tmp/wazo_wizard
+}
+
+function enable_asterisk_rtp_ice() {
+    echo "icesupport=yes" >> /etc/asterisk/rtp.conf
+    echo "stunaddr=stun.l.google.com:19302" >> /etc/asterisk/rtp.conf
+}
+
+function usage() {
+    cat << EOF
+    This script is used to install Wazo on AWS
+
+    usage : $(basename $0) {-c}
+        without arg : install wazo
+        -c          : install console mode (without web interface)
+        -h          : setup ha automatically
+
+EOF
+    exit 1
+}
+
+
+gui=1
+ha_mode=0
+
+while getopts ':ch' opt; do
+    case ${opt} in
+        c)
+            gui=0
+            ;;
+        h)
+            ha_mode=1
+            ;;
+        *)
+            usage
+            ;;
+    esac
+done
+
+cloud-init status --wait
+
+install_wazo
+post_actions
+
+if [ $gui -eq 0 ]; then
+    enable_asterisk_rtp_ice
+fi
+
+if [ $ha_mode -eq 1 ]; then
+    echo "Launching wizard setup"
+    wizard
+    echo "Done"
+    echo "Launching ha configuration"
+    configure_ha
+    echo "Done"
+fi

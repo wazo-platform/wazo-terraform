@@ -4,3 +4,5 @@
 *.tfstate.backup
 terraform.tfvars
 private_ips.txt
+.terraform.lock.hcl
+.terraform/
