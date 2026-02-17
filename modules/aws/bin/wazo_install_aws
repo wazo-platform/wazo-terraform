@@ -8,8 +8,7 @@ function configure_ha() {
 }
 
 function install_wazo() {
-    # NOTE: --allow-releaseinfo-change is only needed on debian < 10.10
-    apt-get update --allow-releaseinfo-change
+    apt-get update
     DEBIAN_FRONTEND=noninteractive apt-get install -yq ansible
     cd /usr/local/src
     wget https://github.com/wazo-platform/wazo-ansible/archive/master.tar.gz -O - | tar -xz
