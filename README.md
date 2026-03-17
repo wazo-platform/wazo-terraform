@@ -1,14 +1,13 @@
 # Install Wazo with Terraform
 
-This repo install and configure Wazo as a HA service on AWS (Amazon Cloud) or Openstack. The login for the
-web interface is **wazo** by default.
+This repo install and configure Wazo as a HA service on AWS (Amazon Cloud) .
+The login for the web interface is **wazo** by default.
 
 Requirements
 ------------
 
 - Terraform >= 0.6.16
 - AWS account
-- Openstack account
 
 Launch
 ------
@@ -32,31 +31,20 @@ aws
     key_name = "" # The key Name you would like to use to connect to the EC2
     private_key = "" # Path of your amazon private key to connect to the EC2
 
-openstack
----------
-
-    user_name = ""
-    password = ""
-    tenant_name = ""
-    auth_url = "http://keystone:5000/v3"
-    key_pair = ""
-    key_file = ""
-    network = ""
-
 
 Launch this command:
 
-    terraform plan -var-file=terraform.tfvars <aws|openstack>
-    terraform apply <aws|openstack>
+    terraform plan -var-file=terraform.tfvars modules/aws
+    terraform apply modules/aws
 
 At this end to getting informations:
 
-    terraform show <aws|openstack>
+    terraform show modules/aws
 
 To remove instance:
 
-    terraform plan -destroy <aws|openstack>
-    terraform destroy <aws|openstack>
+    terraform plan -destroy modules/aws
+    terraform destroy modules/aws
 
 Please remove private_ips.txt if you relaunch your instances.
 
