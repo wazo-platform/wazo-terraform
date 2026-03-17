@@ -11,11 +11,6 @@ function install_wazo() {
     ansible-playbook -i inventories/uc-engine uc-engine.yml
 }
 
-function post_actions() {
-    wazo-auth-keys service update
-    wazo-service restart
-}
-
 function usage() {
     cat << EOF
     This script is used to install Wazo on AWS
@@ -45,7 +40,6 @@ done
 cloud-init status --wait
 
 install_wazo
-post_actions
 
 if [ $ha_mode -eq 1 ]; then
     echo "Launching wizard setup"
