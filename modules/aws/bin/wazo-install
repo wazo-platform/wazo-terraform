@@ -43,9 +43,9 @@ install_wazo
 
 if [ $ha_mode -eq 1 ]; then
     echo "Launching wizard setup"
-    python3 /tmp/wazo_wizard
+    python3 /tmp/wazo-wizard
     echo "Done"
     echo "Launching ha configuration"
-    python3 /tmp/wazo_ctl_ha
+    python3 /tmp/wazo-configure-ha
     echo "Done"
 fi
