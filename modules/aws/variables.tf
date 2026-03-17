@@ -63,6 +63,12 @@ variable "cloud_config_files" {
   default     = []
 }
 
+variable "install_script_path" {
+  description = "Path to the install script to upload and run on instances. Defaults to the bundled wazo-platform install script."
+  type        = string
+  default     = null
+}
+
 variable "ha_mode" {
   description = "Enable automatic ha configuration between created instances. Will need 2 instance to work."
   type        = bool
