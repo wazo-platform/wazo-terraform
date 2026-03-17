@@ -162,23 +162,23 @@ resource "aws_instance" "wazo" {
   }
 
   provisioner "file" {
-    source      = "${path.module}/bin/wazo_install_aws"
-    destination = "/tmp/wazo_install_aws"
+    source      = "${path.module}/bin/wazo-install"
+    destination = "/tmp/wazo-install"
   }
 
   provisioner "file" {
-    source      = "${path.module}/bin/wazo_ctl_ha"
-    destination = "/tmp/wazo_ctl_ha"
+    source      = "${path.module}/bin/wazo-configure-ha"
+    destination = "/tmp/wazo-configure-ha"
   }
 
   provisioner "file" {
-    source      = "${path.module}/bin/wazo_wizard"
-    destination = "/tmp/wazo_wizard"
+    source      = "${path.module}/bin/wazo-wizard"
+    destination = "/tmp/wazo-wizard"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "bash -x /tmp/wazo_install_aws ${var.ha_mode ? "-h" : ""}",
+      "bash -x /tmp/wazo-install ${var.ha_mode ? "-h" : ""}",
     ]
   }
 }
