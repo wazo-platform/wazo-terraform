@@ -1,12 +1,5 @@
 #!/bin/bash -e
 
-function configure_ha() {
-    if [ ! -f /tmp/wazo_ctl_ha ]; then
-        wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/modules/aws/bin/wazo_ctl_ha -O /tmp/wazo_ctl_ha
-    fi
-    python3 /tmp/wazo_ctl_ha
-}
-
 function install_wazo() {
     apt-get update
     DEBIAN_FRONTEND=noninteractive apt-get install -yq ansible
@@ -21,13 +14,6 @@ function install_wazo() {
 function post_actions() {
     wazo-auth-keys service update
     wazo-service restart
-}
-
-function wizard() {
-    if [ ! -f /tmp/wazo_wizard ]; then
-        wget --no-check-certificate https://raw.githubusercontent.com/wazo-platform/wazo-terraform/master/modules/aws/bin/wazo_wizard -O /tmp/wazo_wizard
-    fi
-    python3 /tmp/wazo_wizard
 }
 
 function usage() {
@@ -63,9 +49,9 @@ post_actions
 
 if [ $ha_mode -eq 1 ]; then
     echo "Launching wizard setup"
-    wizard
+    python3 /tmp/wazo_wizard
     echo "Done"
     echo "Launching ha configuration"
-    configure_ha
+    python3 /tmp/wazo_ctl_ha
     echo "Done"
 fi
