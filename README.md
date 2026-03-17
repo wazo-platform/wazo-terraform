@@ -1,62 +1,42 @@
 # Install Wazo with Terraform
 
-This repo install and configure Wazo as a HA service on AWS (Amazon Cloud) or Openstack. The login for the
-web interface is **wazo** by default.
+This repo install and configure Wazo as a HA service on AWS (Amazon Cloud).
+The login for the web interface is **wazo** by default.
 
-Requirements
-------------
+## Requirements
 
-- Terraform >= 0.6.16
+- Terraform >= 1.0
 - AWS account
-- Openstack account
 
-Launch
-------
+## Launch
 
-Install terraform (https://www.terraform.io/downloads.html)
+Install [terraform](https://www.terraform.io/downloads.html)
 
-Init the terraform infrastructure.
+Enter the AWS module directory and init the terraform infrastructure:
 
-    terraform init github.com/wazo-platform/wazo-terraform wazo-terraform
-    cd wazo-terraform
+    cd modules/aws
+    terraform init
 
-Create a terraform.tfvars with your value:
+Create a terraform.tfvars with your values:
 
-aws
----
-
-    access_key = ""
-    secret_key = ""
-    subnet_id = ""
-    vpc_id = ""
-    key_name = "" # The key Name you would like to use to connect to the EC2
-    private_key = "" # Path of your amazon private key to connect to the EC2
-
-openstack
----------
-
-    user_name = ""
-    password = ""
-    tenant_name = ""
-    auth_url = "http://keystone:5000/v3"
-    key_pair = ""
-    key_file = ""
-    network = ""
-
+    subnet_id        = ""
+    vpc_id           = ""
+    public_key_path  = "" # Path to your SSH public key file
+    private_key_path = "" # Path to your SSH private key file
 
 Launch this command:
 
-    terraform plan -var-file=terraform.tfvars <aws|openstack>
-    terraform apply <aws|openstack>
+    terraform plan -var-file=terraform.tfvars
+    terraform apply -var-file=terraform.tfvars
 
 At this end to getting informations:
 
-    terraform show <aws|openstack>
+    terraform show
 
 To remove instance:
 
-    terraform plan -destroy <aws|openstack>
-    terraform destroy <aws|openstack>
+    terraform plan -destroy -var-file=terraform.tfvars
+    terraform destroy -var-file=terraform.tfvars
 
 Please remove private_ips.txt if you relaunch your instances.
 
