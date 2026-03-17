@@ -1,51 +1,10 @@
 #!/bin/bash -e
 
-function install_wazo() {
-    apt-get update
-    DEBIAN_FRONTEND=noninteractive apt-get install -yq ansible
-    cd /usr/local/src
-    wget https://github.com/wazo-platform/wazo-ansible/archive/master.tar.gz -O - | tar -xz
-    cd wazo-ansible-master
+apt-get update
+DEBIAN_FRONTEND=noninteractive apt-get install -yq ansible
+cd /usr/local/src
+wget https://github.com/wazo-platform/wazo-ansible/archive/master.tar.gz -O - | tar -xz
+cd wazo-ansible-master
 
-    ansible-galaxy install -r requirements-postgresql.yml
-    ansible-playbook -i inventories/uc-engine uc-engine.yml
-}
-
-function usage() {
-    cat << EOF
-    This script is used to install Wazo on AWS
-
-    usage : $(basename $0) {-c}
-        without arg : install wazo
-        -h          : setup ha automatically
-
-EOF
-    exit 1
-}
-
-
-ha_mode=0
-
-while getopts ':h' opt; do
-    case ${opt} in
-        h)
-            ha_mode=1
-            ;;
-        *)
-            usage
-            ;;
-    esac
-done
-
-cloud-init status --wait
-
-install_wazo
-
-if [ $ha_mode -eq 1 ]; then
-    echo "Launching wizard setup"
-    python3 /tmp/wazo-wizard
-    echo "Done"
-    echo "Launching ha configuration"
-    python3 /tmp/wazo-configure-ha
-    echo "Done"
-fi
+ansible-galaxy install -r requirements-postgresql.yml
+ansible-playbook -i inventories/uc-engine uc-engine.yml
