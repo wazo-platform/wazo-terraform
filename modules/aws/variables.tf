@@ -69,6 +69,12 @@ variable "install_script_path" {
   default     = null
 }
 
+variable "install_script_args" {
+  description = "Arguments to pass to the install script."
+  type        = string
+  default     = ""
+}
+
 variable "ha_mode" {
   description = "Enable automatic ha configuration between created instances. Will need 2 instance to work."
   type        = bool

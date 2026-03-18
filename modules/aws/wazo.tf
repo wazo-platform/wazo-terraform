@@ -183,7 +183,7 @@ resource "aws_instance" "wazo" {
 
   provisioner "remote-exec" {
     inline = [
-      "bash -x /tmp/wazo-bootstrap ${var.ha_mode ? "-h" : ""}",
+      "bash -x /tmp/wazo-bootstrap ${var.ha_mode ? "-h" : ""} -- ${var.install_script_args}",
     ]
   }
 }

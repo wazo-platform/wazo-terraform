@@ -26,9 +26,11 @@ while getopts ':h' opt; do
     esac
 done
 
+shift $((OPTIND-1))
+
 cloud-init status --wait
 
-bash /tmp/wazo-install
+bash /tmp/wazo-install "$@"
 
 if [ $ha_mode -eq 1 ]; then
     echo "Launching wizard setup"
