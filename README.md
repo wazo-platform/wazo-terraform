@@ -1,3 +1,4 @@
+
 # Install Wazo with Terraform
 
 This repo install and configure Wazo as a HA service on AWS (Amazon Cloud).
