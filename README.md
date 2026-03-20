@@ -20,7 +20,6 @@ Enter the AWS module directory and init the terraform infrastructure:
 Create a terraform.tfvars with your values:
 
     subnet_id        = ""
-    vpc_id           = ""
     public_key_path  = "" # Path to your SSH public key file
     private_key_path = "" # Path to your SSH private key file
 

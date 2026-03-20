@@ -30,10 +30,6 @@ variable "instance_type" {
   default     = "t3a.medium"
 }
 
-variable "vpc_id" {
-  description = "ID of the VPC to use."
-}
-
 variable "amazon_ami_name_filter" {
   description = "Filter to apply on names to retrieve AMI"
   type        = string
