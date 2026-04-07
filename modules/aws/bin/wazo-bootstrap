@@ -27,6 +27,7 @@ while getopts ':h' opt; do
 done
 
 shift $((OPTIND-1))
+[ "$1" = "--" ] && shift
 
 cloud-init status --wait
 
