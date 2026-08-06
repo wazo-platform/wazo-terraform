@@ -75,6 +75,12 @@ variable "install_script_args" {
   default     = ""
 }
 
+variable "root_volume_size" {
+  description = "Size of the instances root volume in GiB. Defaults to the AMI snapshot size."
+  type        = number
+  default     = null
+}
+
 variable "ha_mode" {
   description = "Enable automatic ha configuration between created instances. Will need 2 instance to work."
   type        = bool

@@ -145,6 +145,9 @@ resource "aws_instance" "wazo" {
   }
   vpc_security_group_ids = var.custom_security_group_id == null ? [aws_security_group.wazo.0.id] : [var.custom_security_group_id]
   user_data_base64       = data.template_cloudinit_config.wazo[count.index].rendered
+  root_block_device {
+    volume_size = var.root_volume_size
+  }
   connection {
     host        = var.public_stacks ? self.public_ip : self.private_ip
     user        = "root"
