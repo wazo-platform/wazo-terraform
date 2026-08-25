@@ -27,11 +27,14 @@ If the instances are not directly reachable, provisioning can go through an SSH
 jumphost. Set `bastion_host` and the instances will be reached on their private
 IP through it:
 
-    bastion_host             = "jump.example.com"
-    bastion_user             = ""                  # optional, defaults to root
-    bastion_port             = 22                  # optional, defaults to 22
-    bastion_private_key_path = ""                  # optional, defaults to private_key_path
-    bastion_host_key         = ""                  # optional, defaults to no host verification
+    bastion_host = "jump.example.com"
+
+The other jumphost settings are optional, omit them to keep the defaults:
+
+    bastion_user             = "admin"                    # defaults to root
+    bastion_port             = 2222                       # defaults to 22
+    bastion_private_key_path = "~/.ssh/jumphost_ed25519"  # defaults to private_key_path
+    bastion_host_key         = "ssh-ed25519 AAAA..."      # defaults to no host verification
 
 Note that the jumphost must be allowed to reach the instances on port 22: add
 its CIDR to `additional_allowed_cidr_ranges` if it is outside the subnet.

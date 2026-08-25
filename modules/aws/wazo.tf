@@ -8,6 +8,7 @@ locals {
   keypair_name     = var.names_prefix == "" ? "wazo-terraform" : "${var.names_prefix}-wazo-terraform"
   sg_name          = var.names_prefix == "" ? "wazo" : "${var.names_prefix}-wazo"
   use_bastion      = var.bastion_host != null && var.bastion_host != ""
+  bastion_key_path = var.bastion_private_key_path == null || var.bastion_private_key_path == "" ? null : var.bastion_private_key_path
   allowed_ingress_public = concat(
     var.public_stacks ? ["0.0.0.0/0"] : [],
     var.additional_allowed_cidr_ranges,
@@ -159,7 +160,7 @@ resource "aws_instance" "wazo" {
     bastion_user        = var.bastion_user
     bastion_port        = var.bastion_port
     bastion_host_key    = var.bastion_host_key
-    bastion_private_key = local.use_bastion && var.bastion_private_key_path != null ? file(var.bastion_private_key_path) : null
+    bastion_private_key = local.use_bastion && local.bastion_key_path != null ? file(local.bastion_key_path) : null
   }
 
   provisioner "local-exec" {
