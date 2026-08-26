@@ -100,9 +100,14 @@ variable "install_script_path" {
 }
 
 variable "wazo_version" {
-  description = "Version of Wazo to install, e.g. \"24.16\". Installs from the wazo-<version> tag of wazo-ansible. Defaults to master."
+  description = "Version of Wazo to install, e.g. \"26.08\". Installs the wazo-<version> tag of wazo-ansible and pins the engine packages to the frozen wazo-<version> distribution of the archive repository. Defaults to the latest development version."
   type        = string
   default     = null
+
+  validation {
+    condition     = var.wazo_version == null || var.wazo_version == "" || can(regex("^[0-9]{2}\\.[0-9]{2}(\\.[0-9]+)?$", var.wazo_version))
+    error_message = "The wazo_version value must be a Wazo version such as \"26.08\" or \"26.08.1\", without the \"wazo-\" prefix."
+  }
 }
 
 variable "install_script_args" {

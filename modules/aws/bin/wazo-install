@@ -1,12 +1,21 @@
 #!/bin/bash -e
 
-# Version of Wazo to install, defaults to master. A version X.Y installs from
-# the wazo-X.Y tag of wazo-ansible.
+# Version of Wazo to install, defaults to master (latest development version).
+# A version X.Y installs the wazo-X.Y tag of wazo-ansible and pins the engine
+# packages to the frozen wazo-X.Y distribution of the archive Debian repository,
+# both for the installation and for later upgrades.
 wazo_version="${WAZO_VERSION:-master}"
 if [ "$wazo_version" = "master" ]; then
     ansible_ref="master"
+    version_vars=()
 else
     ansible_ref="wazo-${wazo_version}"
+    version_vars=(
+        -e wazo_debian_repo=archive
+        -e "wazo_distribution=wazo-${wazo_version}"
+        -e wazo_debian_repo_upgrade=archive
+        -e "wazo_distribution_upgrade=wazo-${wazo_version}"
+    )
 fi
 
 apt-get update
@@ -16,4 +25,4 @@ wget "https://github.com/wazo-platform/wazo-ansible/archive/${ansible_ref}.tar.g
 cd "wazo-ansible-${ansible_ref}"
 
 ansible-galaxy install -r requirements-postgresql.yml
-ansible-playbook -i inventories/uc-engine uc-engine.yml
+ansible-playbook -i inventories/uc-engine uc-engine.yml "${version_vars[@]}"

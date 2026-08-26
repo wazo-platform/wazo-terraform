@@ -24,10 +24,14 @@ Create a terraform.tfvars with your values:
     private_key_path = "" # Path to your SSH private key file
 
 By default the latest development version of Wazo is installed, from the master
-branch of wazo-ansible. To install a released version instead, set
-`wazo_version` and the install will use the matching `wazo-<version>` tag:
+branch of wazo-ansible and the `wazo-dev-bookworm` distribution. To install a
+specific released version instead, set `wazo_version`:
 
-    wazo_version = "24.16"
+    wazo_version = "26.08"
+
+The install then uses the matching `wazo-<version>` tag of wazo-ansible and
+installs the engine packages from the frozen `wazo-<version>` distribution of
+the Wazo `archive` Debian repository.
 
 If the instances are not directly reachable, provisioning can go through an SSH
 jumphost. Set `bastion_host` and the instances will be reached on their private
