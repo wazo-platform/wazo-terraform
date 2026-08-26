@@ -9,6 +9,7 @@ locals {
   sg_name          = var.names_prefix == "" ? "wazo" : "${var.names_prefix}-wazo"
   use_bastion      = var.bastion_host != null && var.bastion_host != ""
   bastion_key_path = var.bastion_private_key_path == null || var.bastion_private_key_path == "" ? null : var.bastion_private_key_path
+  wazo_version_env = var.wazo_version == null || var.wazo_version == "" ? "" : "WAZO_VERSION=${var.wazo_version} "
   allowed_ingress_public = concat(
     var.public_stacks ? ["0.0.0.0/0"] : [],
     var.additional_allowed_cidr_ranges,
@@ -194,7 +195,7 @@ resource "aws_instance" "wazo" {
 
   provisioner "remote-exec" {
     inline = [
-      "bash -x /tmp/wazo-bootstrap ${var.ha_mode ? "-h" : ""} -- ${var.install_script_args}",
+      "${local.wazo_version_env}bash -x /tmp/wazo-bootstrap ${var.ha_mode ? "-h" : ""} -- ${var.install_script_args}",
     ]
   }
 }

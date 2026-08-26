@@ -99,6 +99,12 @@ variable "install_script_path" {
   default     = null
 }
 
+variable "wazo_version" {
+  description = "Version of Wazo to install, e.g. \"24.16\". Installs from the wazo-<version> tag of wazo-ansible. Defaults to master."
+  type        = string
+  default     = null
+}
+
 variable "install_script_args" {
   description = "Arguments to pass to the install script."
   type        = string
