@@ -7,6 +7,8 @@ locals {
   instance_name    = var.names_prefix == "" ? "wazo-stack" : "${var.names_prefix}-wazo-stack"
   keypair_name     = var.names_prefix == "" ? "wazo-terraform" : "${var.names_prefix}-wazo-terraform"
   sg_name          = var.names_prefix == "" ? "wazo" : "${var.names_prefix}-wazo"
+  use_bastion      = var.bastion_host != null && var.bastion_host != ""
+  bastion_key_path = var.bastion_private_key_path == null || var.bastion_private_key_path == "" ? null : var.bastion_private_key_path
   allowed_ingress_public = concat(
     var.public_stacks ? ["0.0.0.0/0"] : [],
     var.additional_allowed_cidr_ranges,
@@ -149,10 +151,16 @@ resource "aws_instance" "wazo" {
     volume_size = var.root_volume_size
   }
   connection {
-    host        = var.public_stacks ? self.public_ip : self.private_ip
+    host        = local.use_bastion ? self.private_ip : (var.public_stacks ? self.public_ip : self.private_ip)
     user        = "root"
     type        = "ssh"
     private_key = file(var.private_key_path)
+
+    bastion_host        = local.use_bastion ? var.bastion_host : null
+    bastion_user        = var.bastion_user
+    bastion_port        = var.bastion_port
+    bastion_host_key    = var.bastion_host_key
+    bastion_private_key = local.use_bastion && local.bastion_key_path != null ? file(local.bastion_key_path) : null
   }
 
   provisioner "local-exec" {

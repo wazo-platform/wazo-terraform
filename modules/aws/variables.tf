@@ -57,6 +57,36 @@ variable "private_key_path" {
   type        = string
 }
 
+variable "bastion_host" {
+  description = "Address of the SSH jumphost used to reach the instances. When set, instances are provisioned through it using their private IP."
+  type        = string
+  default     = null
+}
+
+variable "bastion_user" {
+  description = "User to connect with on the SSH jumphost. Defaults to the user used on the instances."
+  type        = string
+  default     = null
+}
+
+variable "bastion_port" {
+  description = "SSH port of the jumphost. Defaults to 22."
+  type        = number
+  default     = null
+}
+
+variable "bastion_private_key_path" {
+  description = "Path to the ssh private key file to use to connect to the jumphost. Defaults to private_key_path."
+  type        = string
+  default     = null
+}
+
+variable "bastion_host_key" {
+  description = "Public key from the jumphost to verify it against. Defaults to no verification."
+  type        = string
+  default     = null
+}
+
 variable "cloud_config_files" {
   description = "Cloud-config files to append to wazo instance cloud-config."
   type        = list(string)
