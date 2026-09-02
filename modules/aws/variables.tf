@@ -105,6 +105,12 @@ variable "install_script_args" {
   default     = ""
 }
 
+variable "instance_tags" {
+  description = "Additional tags to set on the instances. The Name tag is always managed by the module."
+  type        = map(string)
+  default     = {}
+}
+
 variable "root_volume_size" {
   description = "Size of the instances root volume in GiB. Defaults to the AMI snapshot size."
   type        = number

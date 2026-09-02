@@ -142,9 +142,9 @@ resource "aws_instance" "wazo" {
   subnet_id     = var.subnet_id
   key_name      = aws_key_pair.wazo.key_name
   count         = var.nb_instances
-  tags = {
+  tags = merge(var.instance_tags, {
     Name = "${local.instance_name}-${count.index}"
-  }
+  })
   vpc_security_group_ids = var.custom_security_group_id == null ? [aws_security_group.wazo.0.id] : [var.custom_security_group_id]
   user_data_base64       = data.template_cloudinit_config.wazo[count.index].rendered
   root_block_device {
