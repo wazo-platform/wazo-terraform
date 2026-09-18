@@ -10,8 +10,8 @@ output "instances_private_ips" {
   value = aws_instance.wazo.*.private_ip
 }
 
-output "security_group_id" {
-  value = var.custom_security_group_id == null ? aws_security_group.wazo.0.id : var.custom_security_group_id
+output "security_group_ids" {
+  value = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.wazo[0].id]
 }
 
 output "keypair_name" {
