@@ -145,7 +145,7 @@ resource "aws_instance" "wazo" {
   tags = merge(var.instance_tags, {
     Name = "${local.instance_name}-${count.index}"
   })
-  vpc_security_group_ids = var.custom_security_group_id == null ? [aws_security_group.wazo.0.id] : [var.custom_security_group_id]
+  vpc_security_group_ids = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.wazo[0].id]
   user_data_base64       = data.template_cloudinit_config.wazo[count.index].rendered
   root_block_device {
     volume_size = var.root_volume_size
@@ -200,7 +200,7 @@ resource "aws_instance" "wazo" {
 }
 
 resource "aws_security_group" "wazo" {
-  count       = var.custom_security_group ? 0 : 1
+  count       = length(var.security_group_ids) > 0 ? 0 : 1
   name        = local.sg_name
   description = "Wazo stack rules"
   vpc_id      = data.aws_subnet.this.vpc_id

@@ -123,14 +123,10 @@ variable "ha_mode" {
   default     = false
 }
 
-variable "custom_security_group_id" {
-  type    = string
-  default = null
-}
-
-variable "custom_security_group" {
-  type    = bool
-  default = false
+variable "security_group_ids" {
+  description = "Security groups to attach to the instances. The module creates its own when empty."
+  type        = list(string)
+  default     = []
 }
 
 variable "enable_root_password" {
