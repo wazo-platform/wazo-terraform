@@ -6,11 +6,13 @@ variable "names_prefix" {
 
 variable "region" {
   description = "The AWS region to create things in."
+  type        = string
   default     = "us-east-1"
 }
 
 variable "subnet_id" {
   description = "ID of your subnet to use in EC2."
+  type        = string
 }
 
 variable "public_stacks" {
@@ -27,6 +29,7 @@ variable "additional_allowed_cidr_ranges" {
 
 variable "instance_type" {
   description = "Instance type in AWS."
+  type        = string
   default     = "t3a.medium"
 }
 
@@ -44,6 +47,7 @@ variable "amazon_ami_architecture" {
 
 variable "nb_instances" {
   description = "Number of Wazo instances to create."
+  type        = number
   default     = 2
 }
 
