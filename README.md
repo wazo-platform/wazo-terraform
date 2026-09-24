@@ -17,6 +17,11 @@ Enter the AWS module directory and init the terraform infrastructure:
     cd modules/aws
     terraform init
 
+Set the AWS region to deploy in, with the `AWS_REGION` environment variable or
+your [AWS configuration](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-files.html):
+
+    export AWS_REGION=us-east-1
+
 Create a terraform.tfvars with your values:
 
     subnet_id        = ""

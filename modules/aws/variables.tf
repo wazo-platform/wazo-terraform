@@ -4,12 +4,6 @@ variable "names_prefix" {
   default     = ""
 }
 
-variable "region" {
-  description = "The AWS region to create things in."
-  type        = string
-  default     = "us-east-1"
-}
-
 variable "subnet_id" {
   description = "ID of your subnet to use in EC2."
   type        = string

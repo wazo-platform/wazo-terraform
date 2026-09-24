@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 locals {
   private_ips_file = "/tmp/${substr(uuid(), 0, 8)}"
   instance_name    = var.names_prefix == "" ? "wazo-stack" : "${var.names_prefix}-wazo-stack"
