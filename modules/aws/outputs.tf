@@ -1,17 +1,17 @@
 output "instances_ids" {
-  value = aws_instance.wazo.*.id
+  value = local.instances.*.id
 }
 
 output "instances_public_ips" {
-  value = aws_instance.wazo.*.public_ip
+  value = local.instances.*.public_ip
 }
 
 output "instances_private_ips" {
-  value = aws_instance.wazo.*.private_ip
+  value = local.instances.*.private_ip
 }
 
 output "security_group_ids" {
-  value = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.wazo[0].id]
+  value = local.security_group_ids
 }
 
 output "keypair_name" {
