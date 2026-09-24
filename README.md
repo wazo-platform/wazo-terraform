@@ -53,6 +53,4 @@ To remove instance:
     terraform plan -destroy -var-file=terraform.tfvars
     terraform destroy -var-file=terraform.tfvars
 
-Please remove private_ips.txt if you relaunch your instances.
-
 Have fun!
