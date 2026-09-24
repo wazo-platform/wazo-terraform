@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.region
-}
-
 locals {
   private_ips_file = "/tmp/${substr(uuid(), 0, 8)}"
   instance_name    = var.names_prefix == "" ? "wazo-stack" : "${var.names_prefix}-wazo-stack"
@@ -30,24 +26,6 @@ locals {
     {
       port     = 9498
       protocol = "tcp"
-    },
-  ]
-  webrtc_ports = [
-    {
-      port     = 3478
-      protocol = "udp"
-    },
-    {
-      port     = 19302
-      protocol = "udp"
-    },
-    {
-      port     = 5349
-      protocol = "udp"
-    },
-    {
-      port     = 443
-      protocol = "udp"
     },
   ]
   stack_ports = [
@@ -116,7 +94,7 @@ data "aws_subnet" "this" {
   id = var.subnet_id
 }
 
-data "template_cloudinit_config" "wazo" {
+data "cloudinit_config" "wazo" {
   count = var.nb_instances
   dynamic "part" {
     for_each = concat(
@@ -134,6 +112,13 @@ data "template_cloudinit_config" "wazo" {
       merge_type = "list(append)+dict(recurse_list)+str()"
     }
   }
+
+  lifecycle {
+    precondition {
+      condition     = !var.enable_root_password || var.root_password != ""
+      error_message = "root_password must be set when enable_root_password is true."
+    }
+  }
 }
 
 resource "aws_instance" "wazo" {
@@ -146,7 +131,7 @@ resource "aws_instance" "wazo" {
     Name = "${local.instance_name}-${count.index}"
   })
   vpc_security_group_ids = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.wazo[0].id]
-  user_data_base64       = data.template_cloudinit_config.wazo[count.index].rendered
+  user_data_base64       = data.cloudinit_config.wazo[count.index].rendered
   root_block_device {
     volume_size = var.root_volume_size
   }
@@ -235,17 +220,14 @@ resource "aws_security_group" "wazo" {
       )
     }
   }
-  dynamic "ingress" {
-    for_each = local.webrtc_ports
-    content {
-      from_port = ingress.value["port"]
-      to_port   = ingress.value["port"]
-      protocol  = ingress.value["protocol"]
-      cidr_blocks = concat(
-        [data.aws_subnet.this.cidr_block],
-        local.allowed_ingress_public,
-      )
-    }
+  ingress {
+    from_port = 10000
+    to_port   = 20000
+    protocol  = "udp"
+    cidr_blocks = concat(
+      [data.aws_subnet.this.cidr_block],
+      local.allowed_ingress_public,
+    )
   }
   dynamic "ingress" {
     for_each = local.stack_ports
