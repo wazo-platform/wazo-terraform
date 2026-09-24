@@ -32,24 +32,6 @@ locals {
       protocol = "tcp"
     },
   ]
-  webrtc_ports = [
-    {
-      port     = 3478
-      protocol = "udp"
-    },
-    {
-      port     = 19302
-      protocol = "udp"
-    },
-    {
-      port     = 5349
-      protocol = "udp"
-    },
-    {
-      port     = 443
-      protocol = "udp"
-    },
-  ]
   stack_ports = [
     {
       port     = 80
@@ -235,17 +217,14 @@ resource "aws_security_group" "wazo" {
       )
     }
   }
-  dynamic "ingress" {
-    for_each = local.webrtc_ports
-    content {
-      from_port = ingress.value["port"]
-      to_port   = ingress.value["port"]
-      protocol  = ingress.value["protocol"]
-      cidr_blocks = concat(
-        [data.aws_subnet.this.cidr_block],
-        local.allowed_ingress_public,
-      )
-    }
+  ingress {
+    from_port = 10000
+    to_port   = 20000
+    protocol  = "udp"
+    cidr_blocks = concat(
+      [data.aws_subnet.this.cidr_block],
+      local.allowed_ingress_public,
+    )
   }
   dynamic "ingress" {
     for_each = local.stack_ports
