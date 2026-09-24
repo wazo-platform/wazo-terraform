@@ -5,7 +5,7 @@ The login for the web interface is **wazo** by default.
 
 ## Requirements
 
-- Terraform >= 1.0
+- Terraform >= 1.2
 - AWS account
 
 ## Launch
