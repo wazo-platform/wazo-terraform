@@ -116,6 +116,13 @@ data "cloudinit_config" "wazo" {
       merge_type = "list(append)+dict(recurse_list)+str()"
     }
   }
+
+  lifecycle {
+    precondition {
+      condition     = !var.enable_root_password || var.root_password != ""
+      error_message = "root_password must be set when enable_root_password is true."
+    }
+  }
 }
 
 resource "aws_instance" "wazo" {
