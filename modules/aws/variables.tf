@@ -121,6 +121,12 @@ variable "ha_mode" {
   default     = false
 }
 
+variable "bootstrap" {
+  description = "Run the bootstrap provisioners (install, HA) on the instances. When false, instances only run cloud-init and the caller must wait for them to be ready. Changing it on existing instances replaces them."
+  type        = bool
+  default     = true
+}
+
 variable "security_group_ids" {
   description = "Security groups to attach to the instances. The module creates its own when empty."
   type        = list(string)

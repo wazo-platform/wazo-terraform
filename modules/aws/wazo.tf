@@ -10,6 +10,8 @@ locals {
     var.additional_allowed_cidr_ranges,
   )
   allowed_ingress_private = var.additional_allowed_cidr_ranges
+  security_group_ids      = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.wazo[0].id]
+  instances               = var.bootstrap ? aws_instance.wazo : aws_instance.wazo_unbootstrapped
   sip_ports = [
     {
       port     = 5060
@@ -126,11 +128,11 @@ resource "aws_instance" "wazo" {
   instance_type = var.instance_type
   subnet_id     = var.subnet_id
   key_name      = aws_key_pair.wazo.key_name
-  count         = var.nb_instances
+  count         = var.bootstrap ? var.nb_instances : 0
   tags = merge(var.instance_tags, {
     Name = "${local.instance_name}-${count.index}"
   })
-  vpc_security_group_ids = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.wazo[0].id]
+  vpc_security_group_ids = local.security_group_ids
   user_data_base64       = data.cloudinit_config.wazo[count.index].rendered
   root_block_device {
     volume_size = var.root_volume_size
@@ -181,6 +183,30 @@ resource "aws_instance" "wazo" {
     inline = [
       "bash -x /tmp/wazo-bootstrap ${var.ha_mode ? "-h" : ""} -- ${var.install_script_args}",
     ]
+  }
+}
+
+# Duplicated from aws_instance.wazo because provisioners cannot be conditional
+resource "aws_instance" "wazo_unbootstrapped" {
+  ami           = data.aws_ami.wazo.id
+  instance_type = var.instance_type
+  subnet_id     = var.subnet_id
+  key_name      = aws_key_pair.wazo.key_name
+  count         = var.bootstrap ? 0 : var.nb_instances
+  tags = merge(var.instance_tags, {
+    Name = "${local.instance_name}-${count.index}"
+  })
+  vpc_security_group_ids = local.security_group_ids
+  user_data_base64       = data.cloudinit_config.wazo[count.index].rendered
+  root_block_device {
+    volume_size = var.root_volume_size
+  }
+
+  lifecycle {
+    precondition {
+      condition     = !var.ha_mode
+      error_message = "ha_mode requires bootstrap to be true."
+    }
   }
 }
 
