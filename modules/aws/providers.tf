@@ -3,5 +3,8 @@ terraform {
     aws = {
       source = "hashicorp/aws"
     }
+    cloudinit = {
+      source = "hashicorp/cloudinit"
+    }
   }
 }

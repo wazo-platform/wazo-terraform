@@ -116,7 +116,7 @@ data "aws_subnet" "this" {
   id = var.subnet_id
 }
 
-data "template_cloudinit_config" "wazo" {
+data "cloudinit_config" "wazo" {
   count = var.nb_instances
   dynamic "part" {
     for_each = concat(
@@ -146,7 +146,7 @@ resource "aws_instance" "wazo" {
     Name = "${local.instance_name}-${count.index}"
   })
   vpc_security_group_ids = length(var.security_group_ids) > 0 ? var.security_group_ids : [aws_security_group.wazo[0].id]
-  user_data_base64       = data.template_cloudinit_config.wazo[count.index].rendered
+  user_data_base64       = data.cloudinit_config.wazo[count.index].rendered
   root_block_device {
     volume_size = var.root_volume_size
   }
