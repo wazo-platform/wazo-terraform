@@ -17,3 +17,7 @@ output "security_group_ids" {
 output "keypair_name" {
   value = aws_key_pair.wazo.key_name
 }
+
+output "ami_name" {
+  value = data.aws_ami.wazo.name
+}
